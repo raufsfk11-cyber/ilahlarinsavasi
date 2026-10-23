@@ -2,7 +2,7 @@ const BASLANGIC_PARASI=20, TAKIM_LIMITI=5;
 const el=id=>document.getElementById(id);
 let oyuncular=[],havuz=[],tumKarakterler=[],tumIliskiler=[],aktifKarakter=null,aktifFotoURL=null;
 let lot=0,sira=0,teklif=0,teklifSahibi=-1,paslar=new Set(),lotBitti=false,oyunBitti=false,animasyonDevamEdiyor=false;
-let mezatModu='acik',secimYapan=-1;
+let mezatModu='acik',secimYapan=-1,transferler=[];
 const fotoURLleri=new Map();
 async function verileriYukle(){tumKarakterler=await karakterleriGetir();tumIliskiler=iliskileriSabitle(await iliskileriGetir());el('havuzBilgisi').textContent='Kayıtlı karakter sayısı: '+tumKarakterler.length;}
 verileriYukle().catch(e=>{console.error(e);el('havuzBilgisi').textContent='Karakterler yüklenemedi.';});
@@ -17,8 +17,8 @@ async function oyunuBaslat(){
  oyuncular=[isim1,isim2].map(isim=>({isim,para:BASLANGIC_PARASI,takim:[]}));
  havuz=[...tumKarakterler];for(let i=havuz.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[havuz[i],havuz[j]]=[havuz[j],havuz[i]];}
  lot=0;teklif=0;teklifSahibi=-1;paslar=new Set();lotBitti=false;oyunBitti=false;animasyonDevamEdiyor=false;
- aktifBuyuler=buyuleriSec();
- ekranAc('mezatEkrani');yeniLot();buyuTanitimiGoster();
+ buyuSecimiBaslat();transferler=[];
+ ekranAc('mezatEkrani');yeniLot();buyuSecimEkraniniGuncelle();
 }
 function iliskiBul(a,b){return tumIliskiler.find(i=>(i.karakter1===a&&i.karakter2===b)||(i.karakter1===b&&i.karakter2===a));}
 function takimKimyasi(takim){let bonus=0;const olaylar=[];for(let i=0;i<takim.length;i++)for(let j=i+1;j<takim.length;j++){
@@ -53,7 +53,7 @@ function karakterSec(hedef){if(lotBitti||oyunBitti||mezatModu!=='secim'||!bosYer
 function otomatikKarakterVer(hedef){mezatModu='otomatik';sira=hedef;arayuzuGuncelle();karakteriDagit(hedef,0,'ücretsiz olarak takıma katıldı');}
 function karakteriDagit(hedef,fiyat,aciklama){
  if(lotBitti||oyunBitti||!bosYerVar(hedef)||fiyat>oyuncular[hedef].para)return;
- lotBitti=true;const o=oyuncular[hedef],k=aktifKarakter,slot=o.takim.length;o.para-=fiyat;o.takim.push(k);
+ lotBitti=true;const o=oyuncular[hedef],k=aktifKarakter,slot=o.takim.length;o.para-=fiyat;o.takim.push(k);transferler.push({oyuncu:hedef,k,fiyat});
  el('spiker').textContent=`${k.isim} → ${o.isim}: ${aciklama}${fiyat?' (₺'+fiyat+')':''}`;
  arayuzuGuncelle();animasyonDevamEdiyor=true;
  const kart=document.querySelector('#mezatEkrani .karakter-kart');kart?.classList.add('satildi-efekt');
@@ -105,7 +105,7 @@ function arayuzuGuncelle(){oyuncuGuncelle(0);oyuncuGuncelle(1);const k=aktifKara
  el('karakterHikaye').textContent=k.hikaye||'Henüz hikâye eklenmemiş.';
  ['guc','savunma','hiz','zeka'].forEach(key=>istatistikGoster(key,k[key]));istatistikGoster('overall',overallAl(k));el('fiyatYazisi').textContent='₺'+teklif;el('teklifVeren').textContent=teklifSahibi===-1?'Henüz teklif yok':oyuncular[teklifSahibi].isim;
  el('siraYazisi').textContent=lotBitti?'KARAKTER DAĞITILDI':mezatModu==='secim'?'SEÇİM: '+oyuncular[secimYapan].isim.toLocaleUpperCase('tr-TR'):mezatModu==='otomatik'?'OTOMATİK DAĞITIM':'SIRA: '+oyuncular[sira].isim.toLocaleUpperCase('tr-TR');
- el('kartOvr').textContent=overallAl(k);karakterEtiketleriniGoster(k);buyuAlaniniGuncelle();
+ el('kartOvr').textContent=overallAl(k);karakterEtiketleriniGoster(k);karakterPasifiniGoster(k);buyuAlaniniGuncelle();
  iliskiUyarilariniGoster();if(!lotBitti)butonlariYenile();
 }
 const savasTurlari=[{ad:'SALDIRI ÇATIŞMASI',agirlik:{guc:1.5,savunma:.35,hiz:.7,zeka:.3}},{ad:'SAVUNMA VE TAKTİK',agirlik:{guc:.35,savunma:1.5,hiz:.3,zeka:.75}},{ad:'SON KARŞILAŞMA',agirlik:{guc:.7,savunma:.45,hiz:1.2,zeka:.9}}];
@@ -119,10 +119,35 @@ function performansHesapla(o,t,turIndex,rakip){const a=t.agirlik;let p=0;o.takim
 function savasiBaslat(){if(oyunBitti||animasyonDevamEdiyor)return;if(!takimlarTamam()){alert('Savaş için iki takımın da 5 karakteri olmalı.');return;}oyunBitti=true;
  // Savaş, büyüler ve artan para uygulanmış takım kopyalarıyla yapılır.
  const buyulu=[0,1].map(savasTakimi),savascilar=oyuncular.map((o,i)=>({...o,takim:buyulu[i].takim}));
+ // Sıra: büyü+para → pasifler → olay → oranlar. Oranlar son hâliyle hesaplanır.
+ const pasifler=pasifleriUygula(savascilar.map(o=>o.takim));
+ const olay=savasOlayiSec(savascilar.map(o=>o.takim)),olayEtkileri=savasOlayiUygula(olay,savascilar.map(o=>o.takim)),oranlar=iddaaOranlari(savascilar);
  const kazan=[0,0],sonuclar=[];savasTurlari.forEach((tur,i)=>{const a=performansHesapla(savascilar[0],tur,i,savascilar[1]),b=performansHesapla(savascilar[1],tur,i,savascilar[0]);const kim=a===b?(Math.random()<.5?0:1):(a>b?0:1);kazan[kim]++;sonuclar.push({ad:tur.ad,tur:i+1,kazanan:oyuncular[kim].isim,skor:[a,b].map(Math.round)});});
  const kazanan=kazan[0]>kazan[1]?0:1;el('kazananYazisi').textContent='🏆 '+oyuncular[kazanan].isim.toLocaleUpperCase('tr-TR')+' KAZANDI!';el('savasOzeti').textContent=oyuncular[0].isim+' '+kazan[0]+' - '+kazan[1]+' '+oyuncular[1].isim;
  const turAlan=el('turSonuclari');turAlan.replaceChildren();sonuclar.forEach(t=>{const d=document.createElement('div');d.className='tur-kart';const b=document.createElement('strong'),p=document.createElement('p');b.textContent='TUR '+t.tur+' • '+t.ad;p.textContent='Kazanan: '+t.kazanan;const s=document.createElement('small');s.className='tur-skor';s.textContent=`${oyuncular[0].isim} ${t.skor[0]} – ${t.skor[1]} ${oyuncular[1].isim}`;d.append(b,p,s);turAlan.append(d);});
- const alan=el('sonucKartlari');alan.replaceChildren();oyuncular.forEach((o,oi)=>{const d=document.createElement('div');d.className='sonuc-kart';const b=document.createElement('strong'),p=document.createElement('p');b.textContent=o.isim.toLocaleUpperCase('tr-TR');p.textContent='Takım: '+o.takim.map(k=>k.isim).join(', ');d.append(b,p);const oz=takimOzelligi(savascilar[oi].takim),rakipOz=takimOzelligi(savascilar[1-oi].takim),ozP=document.createElement('p');ozP.textContent=`${oz.simge} Takım özelliği: ${oz.ad} (${oz.stat} ${oz.toplamlar[oz.anahtar]}) • ${ozellikEtkisiMetni(oz.anahtar,rakipOz.anahtar)}`;const ovP=document.createElement('p');ovP.textContent='Takım overall ortalaması: '+takimOverall(o.takim);d.append(ozP,ovP);if(buyulu[oi].paraBonusu){const e=document.createElement('p');e.textContent=`💰 Artan ₺${o.para}: her karaktere +${buyulu[oi].paraBonusu} GÜÇ`;d.append(e);}buyulu[oi].olaylar.forEach(item=>{const e=document.createElement('p');e.textContent='🔮 '+item.metin;d.append(e);});const kimya=takimKimyasi(o.takim);if(!kimya.olaylar.length){const e=document.createElement('p');e.textContent='Etkinleşen dostluk veya düşmanlık yok.';d.append(e);}kimya.olaylar.forEach(item=>{const e=document.createElement('p');e.textContent=(item.puan>=0?'🤝 ':'⚔️ ')+item.metin;d.append(e);});alan.append(d);});ekranAc('sonucEkrani');}
+ const alan=el('sonucKartlari');alan.replaceChildren();oyuncular.forEach((o,oi)=>{const d=document.createElement('div');d.className='sonuc-kart';const b=document.createElement('strong'),p=document.createElement('p');b.textContent=o.isim.toLocaleUpperCase('tr-TR');p.textContent='Takım: '+o.takim.map(k=>k.isim).join(', ');d.append(b,p);const oz=takimOzelligi(savascilar[oi].takim),rakipOz=takimOzelligi(savascilar[1-oi].takim),ozP=document.createElement('p');ozP.textContent=`${oz.simge} Takım özelliği: ${oz.ad} (${oz.stat} ${oz.toplamlar[oz.anahtar]}) • ${ozellikEtkisiMetni(oz.anahtar,rakipOz.anahtar)}`;const ovP=document.createElement('p');ovP.textContent='Takım overall ortalaması: '+takimOverall(o.takim);d.append(ozP,ovP);if(buyulu[oi].paraBonusu){const e=document.createElement('p');e.textContent=`💰 Artan ₺${o.para}: her karaktere +${buyulu[oi].paraBonusu} GÜÇ`;d.append(e);}buyulu[oi].olaylar.forEach(item=>{const e=document.createElement('p');e.textContent='🔮 '+item.metin;d.append(e);});pasifler[oi].forEach(p=>{const e=document.createElement('p');e.textContent=`⚡ ${p.karakter} • ${p.ad}: ${p.metin}`;d.append(e);});const kimya=takimKimyasi(o.takim);if(!kimya.olaylar.length){const e=document.createElement('p');e.textContent='Etkinleşen dostluk veya düşmanlık yok.';d.append(e);}kimya.olaylar.forEach(item=>{const e=document.createElement('p');e.textContent=(item.puan>=0?'🤝 ':'⚔️ ')+item.metin;d.append(e);});alan.append(d);});sonucEkstrasiniYaz(savascilar,kazanan,olay,olayEtkileri,oranlar,pasifler);ekranAc('sonucEkrani');}
+// Bir karakterin üç turdaki stat katkısı (takım özelliği çarpanı dahil).
+function karakterKatkisi(k,benimOz,rakipOz){return savasTurlari.reduce((t,tur,i)=>{const a=tur.agirlik;return t+((Number(k.guc)||0)*a.guc+(Number(k.savunma)||0)*a.savunma+(Number(k.hiz)||0)*a.hiz+(Number(k.zeka)||0)*a.zeka)*ozellikCarpani(benimOz,rakipOz,i);},0);}
+// Maçın adamı ve transfer istatistikleri; online'da metinler misafire aynen gönderilir.
+function sonucEkstrasiniYaz(savascilar,kazanan,olay,olayEtkileri,oranlar,pasifler){
+ const alan=el('sonucEkstra');alan.replaceChildren();const satir=(metin,sinif)=>{const p=document.createElement('p');p.textContent=metin;if(sinif)p.className=sinif;alan.append(p);};
+ const tetiklenen=pasifler.flat();
+ if(tetiklenen.length)satir('⚡ DEVREYE GİREN PASİFLER: '+tetiklenen.map(p=>`${p.ad} (${p.karakter})`).join(' • '),'pasif');
+ satir(`${olay.simge} OLAY: ${olay.ad}. ${olay.metin}${olayEtkileri.length?' ('+olayEtkileri.join(' • ')+')':''}`,'olay');
+ satir(`📊 İDDAA ORANLARI: ${oyuncular[0].isim} ${oranlar.oran[0]} • ${oyuncular[1].isim} ${oranlar.oran[1]}`,'oran');
+ if(oranlar.ihtimal[kazanan]<.4)satir(`🎰 SÜRPRİZ! ${oyuncular[kazanan].isim} %${Math.round(oranlar.ihtimal[kazanan]*100)} ihtimalle kazandı, ${oranlar.oran[kazanan]} oran tuttu!`,'surpriz');
+ const benim=takimOzelligi(savascilar[kazanan].takim)?.anahtar,rakip=takimOzelligi(savascilar[1-kazanan].takim)?.anahtar;
+ const mvp=savascilar[kazanan].takim.map(k=>({k,puan:Math.round(karakterKatkisi(k,benim,rakip))})).sort((a,b)=>b.puan-a.puan)[0];
+ if(mvp)satir(`⭐ MAÇIN ADAMI: ${mvp.k.isim} (${oyuncular[kazanan].isim}) • ${mvp.puan} katkı puanı`,'mvp');
+ const pahali=[...transferler].sort((a,b)=>b.fiyat-a.fiyat)[0];
+ if(pahali&&pahali.fiyat)satir(`💸 EN PAHALI TRANSFER: ${pahali.k.isim} → ${oyuncular[pahali.oyuncu].isim} (₺${pahali.fiyat})`);
+ const kelepir=[...transferler].sort((a,b)=>overallAl(b.k)/(b.fiyat+1)-overallAl(a.k)/(a.fiyat+1))[0];
+ if(kelepir)satir(`🤑 KELEPİR: ${kelepir.k.isim} (OVR ${overallAl(kelepir.k)}) → ${oyuncular[kelepir.oyuncu].isim} ${kelepir.fiyat?'₺'+kelepir.fiyat:'bedavaya'}`);
+ satir('🧾 HARCAMA: '+oyuncular.map(o=>`${o.isim} ₺${BASLANGIC_PARASI-o.para}`).join(' • '));
+ window.MezatMacKaydet?.();
+}
+// Aynı isimler ve aynı modla yeni oyun; sayfa yenilenmez.
+function rovans(){oyunuBaslat();}
 
 /* =========================================
    MEZAT - TEKLIF PANELI EFEKTLERI

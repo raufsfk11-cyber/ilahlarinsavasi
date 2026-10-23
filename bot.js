@@ -12,10 +12,28 @@
 
   function el(id) { return document.getElementById(id); }
   function sayi(v) { return Number(v) || 0; }
-  // Aktif büyüden etkilenen karakterler bot için daha değerlidir.
+  // Botun büyüsünden güçlenenler değerli, rakibin büyüsünden zayıflayanlar değersizdir.
   function buyuDegeri(k) {
-    if (typeof aktifBuyuler === 'undefined' || typeof etiketVar !== 'function') return 0;
-    return aktifBuyuler.reduce((t, id) => t + (etiketVar(k, BUYULER[id].etiket) ? 8 : 0) - (id === 'kadin' && etiketVar(k, 'kadin-korkusu') ? 8 : 0), 0);
+    if (typeof buyuSecimleri === 'undefined' || typeof etiketVar !== 'function') return 0;
+    return buyuSecimleri.reduce((t, id, sahip) => {
+      if (!id) return t;
+      const etiketli = etiketVar(k, BUYULER[id].etiket) ? (sahip === 1 ? 8 : -8) : 0;
+      return t + etiketli - (id === 'kadin' && etiketVar(k, 'kadin-korkusu') ? 8 : 0);
+    }, 0);
+  }
+  // Havuzda daha çok ve daha güçlü taşıyıcısı olan büyüyü seçer; kolayda rastgele.
+  let buyuSecimBekliyor = false;
+  function botBuyuSec() {
+    if (typeof buyuSecimleri === 'undefined' || !buyuSecimleri[0] || buyuSecimleri[1] || buyuSecimBekliyor) return;
+    buyuSecimBekliyor = true;
+    setTimeout(() => {
+      buyuSecimBekliyor = false;
+      if (!window.MezatBotModu || !aktif || !buyuSecimleri[0] || buyuSecimleri[1]) return;
+      const puan = id => tumKarakterler.reduce((t, k) => t + (etiketVar(k, BUYULER[id].etiket) ? overallAl(k) : 0), 0);
+      const secenekler = [...buyuHavuzlari[1]];
+      const id = zorluk === 'kolay' ? secenekler[Math.floor(Math.random() * secenekler.length)] : secenekler.sort((a, b) => puan(b) - puan(a))[0];
+      buyuSec(1, id);
+    }, 1100);
   }
   function havuzKalan() {
     return typeof havuz !== 'undefined' ? havuz.length : 0;
@@ -212,6 +230,7 @@
     }, true);
     setInterval(() => {
       if (!window.MezatBotModu || !aktif) return;
+      botBuyuSec();
       const botSirasi = !lotBitti && ((mezatModu === 'acik' && sira === 1) || (mezatModu === 'secim' && secimYapan === 1));
       el('mezatEkrani')?.classList.toggle('bot-sira', botSirasi);
       if (botSirasi) botKararVer();

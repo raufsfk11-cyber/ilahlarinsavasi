@@ -172,8 +172,21 @@
     scores.append(blueScore, etiket('span', '-'), redScore);
     shell.appendChild(scores);
 
+    // Tur puanlarını iki renkli çubukla gösterir; skor metni .tur-skor'dan okunur.
+    const cubuk = etiket('div', undefined, 'ms-guc-cubugu gizli');
+    const cubukMavi = etiket('span', '', 'blue'), cubukKirmizi = etiket('span', '', 'red');
+    cubuk.append(cubukMavi, cubukKirmizi);
+    shell.appendChild(cubuk);
+
     const story = etiket('div', '', 'ms-story');
     shell.appendChild(story);
+    // Olay ve iddaa oranları; sonuç ekranındaki metinlerden gelir (online misafirde de vardır).
+    const bilgi = etiket('div', undefined, 'ms-bilgi');
+    ['pasif', 'olay', 'oran'].forEach(sinif => {
+      const metin = document.querySelector('#sonucEkstra .' + sinif)?.textContent;
+      if (metin) bilgi.appendChild(etiket('p', metin, sinif));
+    });
+    shell.appendChild(bilgi);
     const bonus = etiket('div', '', 'ms-bonus');
     shell.appendChild(bonus);
     const foot = etiket('div', undefined, 'ms-foot');
@@ -186,8 +199,11 @@
     const bonusMetni = oyuncular.map(o => {
       if (typeof takimKimyasi !== 'function') return '';
       const kimya = takimKimyasi(o.takim);
-      const oz = typeof takimOzelligi === 'function' ? takimOzelligi(typeof savasTakimi === 'function' ? savasTakimi(oyuncular.indexOf(o)).takim : o.takim) : null;
-      return o.isim + ' • ' + (kimya.bonus >= 0 ? '+' : '') + kimya.bonus + ' takım uyumu' + (o.para ? ' • 💰 +' + o.para * (typeof PARA_GUC_BONUSU === 'number' ? PARA_GUC_BONUSU : 0) + ' GÜÇ' : '') + (oz ? ' • ' + oz.simge + ' ' + oz.ad : '');
+      // Özellik, olay sonrası hesaplanan sonuç kartından okunur ki iki ekran aynı şeyi söylesin.
+      const kart = [...document.querySelectorAll('#sonucKartlari .sonuc-kart')][oyuncular.indexOf(o)];
+      const ozMetni = [...(kart?.querySelectorAll('p') || [])].map(p => p.textContent).find(t => t.includes('Takım özelliği:'));
+      const oz = ozMetni ? ozMetni.split(' (')[0].replace('Takım özelliği: ', '') : '';
+      return o.isim + ' • ' + (kimya.bonus >= 0 ? '+' : '') + kimya.bonus + ' takım uyumu' + (o.para ? ' • 💰 +' + o.para * (typeof PARA_GUC_BONUSU === 'number' ? PARA_GUC_BONUSU : 0) + ' GÜÇ' : '') + (oz ? ' • ' + oz : '');
     }).join('     |     ');
 
     function kapat() {
@@ -204,6 +220,21 @@
       void shell.offsetWidth;
       shell.classList.add('ms-flash');
       bonus.textContent = bonusMetni;
+      bilgi.classList.toggle('gizli', asama !== 0);
+      const skor = asama >= 1 && asama <= 3 ? (turlar[asama - 1].skor.match(/(\d+)\s*–\s*(\d+)/) || []).slice(1).map(Number) : [];
+      cubuk.classList.toggle('gizli', skor.length !== 2);
+      if (skor.length === 2) {
+        const oran = skor[0] + skor[1] ? skor[0] / (skor[0] + skor[1]) : .5;
+        cubukMavi.textContent = skor[0];
+        cubukKirmizi.textContent = skor[1];
+        // Önce ortada başlar, sonra gerçek orana kayar.
+        cubukMavi.style.width = '50%';
+        cubukKirmizi.style.width = '50%';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          cubukMavi.style.width = (oran * 100).toFixed(1) + '%';
+          cubukKirmizi.style.width = ((1 - oran) * 100).toFixed(1) + '%';
+        }));
+      }
 
       if (asama === 0) {
         title.textContent = 'SAVAŞ BAŞLIYOR';
@@ -229,7 +260,8 @@
       const galip = toplam[0] > toplam[1] ? 0 : 1;
       title.textContent = '🏆 ZAFER!';
       sub.textContent = oyuncular[galip].isim.toLocaleUpperCase('tr-TR') + ' KAZANDI';
-      story.textContent = `${oyuncular[0].isim} ${toplam[0]} - ${toplam[1]} ${oyuncular[1].isim}. Kazanan takım kupayı kaldırdı!`;
+      const ek = sinif => document.querySelector('#sonucEkstra .' + sinif)?.textContent || '';
+      story.textContent = `${oyuncular[0].isim} ${toplam[0]} - ${toplam[1]} ${oyuncular[1].isim}. Kazanan takım kupayı kaldırdı!` + [ek('mvp'), ek('surpriz')].filter(Boolean).map(m => ' ' + m).join('');
       button.textContent = 'AYRINTILI SONUÇLARI GÖR →';
     }
 
@@ -256,5 +288,13 @@
       }
     }
     return sonuc;
+  };
+
+  // Online misafir savaşı kendisi hesaplamaz; hazır sonuç DOM'a yazılınca sahneyi açar.
+  window.MezatSavasSahnesi = function () {
+    if (gosterimAcik) return;
+    try { baslat(); } catch (err) {
+      console.error('Savaş sahnesi gösterilemedi; standart sonuç ekranı açık.', err);
+    }
   };
 })();

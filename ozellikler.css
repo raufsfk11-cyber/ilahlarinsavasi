@@ -142,3 +142,43 @@
 
 /* TUR SKORU */
 .tur-kart .tur-skor { display: block; margin-top: 4px; color: #9fb3ba; }
+
+/* BÜYÜ SEÇİMİ (DRAFT) */
+#buyuTanitim button.buyu-tanitim-kart {
+    padding: 14px;
+    border: 1px solid #5b4a78;
+    background: #1a1230;
+    color: inherit;
+    font-size: inherit;
+    transition: transform .15s, border-color .15s, box-shadow .15s;
+}
+
+#buyuTanitim button.buyu-tanitim-kart:hover,
+#buyuTanitim button.buyu-tanitim-kart:focus-visible {
+    transform: translateY(-4px);
+    border-color: #e1c2ff;
+    box-shadow: 0 0 24px #b56cff66;
+    outline: none;
+}
+
+#buyuTanitim .buyu-sahip {
+    margin: 0 0 10px !important;
+    color: #f2ca83 !important;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+/* SONUÇ: MAÇIN ADAMI VE TRANSFER İSTATİSTİKLERİ */
+.sonuc-ekstra {
+    display: grid;
+    gap: 6px;
+    margin: 14px 0;
+    padding: 12px 16px;
+    border: 1px solid #b6904f;
+    border-radius: 10px;
+    background: #10161dcc;
+    text-align: left;
+}
+
+.sonuc-ekstra p { margin: 0; color: #d9e2e6; font-size: 16px; }
+.sonuc-ekstra .mvp { color: #f6d78f; font-size: 19px; font-weight: 900; }

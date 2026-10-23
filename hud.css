@@ -375,6 +375,11 @@
     overflow: hidden !important;
 }
 
+/* Yukarıdaki display kuralı .gizli'yi eziyordu; mezat ekranı diğer ekranların altında görünüyordu. */
+#mezatEkrani.gizli {
+    display: none !important;
+}
+
 /* Üst envanter küçülmesin */
 #mezatEkrani .yeni-hud {
     flex: 0 0 auto !important;

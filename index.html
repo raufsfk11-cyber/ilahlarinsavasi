@@ -3,13 +3,25 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MEZAT | Arkadaş Savaşları</title>
-<link rel="stylesheet" href="style.css?v=3">
-<link rel="stylesheet" href="hud.css?v=3">
-<link rel="stylesheet" href="panel-yeni.css?v=3">
-<link rel="stylesheet" href="ana-menu.css?v=3">
-<link rel="stylesheet" href="ozellikler.css?v=3">
+<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="hud.css?v=6">
+<link rel="stylesheet" href="panel-yeni.css?v=6">
+<link rel="stylesheet" href="ana-menu.css?v=6">
+<link rel="stylesheet" href="ozellikler.css?v=6">
+<link rel="stylesheet" href="gelistirmeler.css?v=6">
+<link rel="stylesheet" href="acilis.css?v=6">
 </head>
 <body>
+<div id="acilisEkrani">
+  <video src="acilis.mp4" preload="auto" playsinline></video>
+  <div class="acilis-giris">
+    <h1 class="acilis-baslik">ILAHLARIN SAVASI</h1>
+    <button class="acilis-oynat" aria-label="Açılış videosunu izle">▶</button>
+    <div class="acilis-ipucu">HİKÂYEYİ İZLEMEK İÇİN TIKLA</div>
+  </div>
+  <button class="acilis-gec">GEÇ ›</button>
+</div>
+<script src="acilis.js?v=6"></script>
 <section id="anaEkran" class="giris ekran mezat-ana-menu">
   <div class="menu-atmosfer" aria-hidden="true"></div>
   <div class="menu-kart-sahnesi menu-kart-sol" aria-hidden="true">
@@ -57,17 +69,19 @@
  </header>
  <main class="satis-alani">
   <article class="karakter-kart"><div class="kart-resim"><div class="kart-ust"><span id="kartKategori">KARAKTER</span><span id="kartNadirlik">NORMAL</span></div><div id="karakterResmi" class="karakter-resmi">⚔️</div><div class="kart-ovr" title="Overall"><small>OVR</small><strong id="kartOvr">0</strong></div><div class="kart-numara" id="kartLot">LOT 01</div></div><div class="kart-isim" id="kartIsim">KARAKTER</div></article>
-  <div id="karakterBilgi" class="karakter-bilgi"><div id="lakapSahne" class="lakap-sahne" aria-hidden="true"><div id="lakapArka" class="lakap-arka" data-text="MEZAT">MEZAT</div></div><div class="bilgi-etiket">KARAKTER DOSYASI</div><h2 id="karakterAdi">KARAKTER ADI</h2><div id="karakterEtiketleri" class="karakter-etiketleri"></div><p id="karakterHikaye" class="hikaye"></p><div class="iliski-baslik">🤝 DOSTLUK VE REKABET</div><div id="iliskiUyarilari" class="iliski-listesi"></div><div class="iliski-baslik">🔮 BU OYUNUN BÜYÜLERİ</div><div id="buyuAlani" class="buyu-alani"></div></div>
+  <div id="karakterBilgi" class="karakter-bilgi"><div id="lakapSahne" class="lakap-sahne" aria-hidden="true"><div id="lakapArka" class="lakap-arka" data-text="MEZAT">MEZAT</div></div><div class="bilgi-etiket">KARAKTER DOSYASI</div><h2 id="karakterAdi">KARAKTER ADI</h2><div id="karakterEtiketleri" class="karakter-etiketleri"></div><div id="karakterPasif" class="karakter-pasif gizli"></div><p id="karakterHikaye" class="hikaye"></p><div class="iliski-baslik">🤝 DOSTLUK VE REKABET</div><div id="iliskiUyarilari" class="iliski-listesi"></div><div class="iliski-baslik">🔮 BU OYUNUN BÜYÜLERİ</div><div id="buyuAlani" class="buyu-alani"></div></div>
   <aside class="istatistik-panel"><div class="istatistik-baslik">KARAKTER ÖZELLİKLERİ</div><div class="stat stat-overall"><div><span>OVERALL</span><strong id="overall">0</strong></div><div class="stat-arka"><div id="overallBar"></div></div></div><div class="stat"><div><span>GÜÇ</span><strong id="guc">0</strong></div><div class="stat-arka"><div id="gucBar"></div></div></div><div class="stat"><div><span>SAVUNMA</span><strong id="savunma">0</strong></div><div class="stat-arka"><div id="savunmaBar"></div></div></div><div class="stat"><div><span>HIZ</span><strong id="hiz">0</strong></div><div class="stat-arka"><div id="hizBar"></div></div></div><div class="stat"><div><span>ZEKA</span><strong id="zeka">0</strong></div><div class="stat-arka"><div id="zekaBar"></div></div></div><div class="stat-not">Takım en yüksek toplam statının özelliğini alır. 🧠 ZEKA › 💪 GÜÇ › 🛡️ SAVUNMA › ⚡ HIZ › 🧠 ZEKA. Dostluk ve düşmanlık ilişkileri de savaşı etkiler.</div></aside>
  </main>
  <footer class="teklif-panel"><div class="teklif-ust"><span id="siraYazisi" class="sira-kutu">SIRA</span><span id="spiker">Yeni karakter açık artırmada!</span><span id="lotSayaci">LOT 01</span></div><div class="teklif-alt"><div class="fiyat"><small>MEVCUT TEKLİF</small><strong id="fiyatYazisi">₺0</strong><small id="teklifVeren">Henüz teklif yok</small></div><div id="teklifButonlari" class="butonlar"></div></div></footer>
 </section>
-<section id="sonucEkrani" class="giris ekran gizli"><div class="giris-kutu sonuc-kutu"><div class="kucuk-baslik">TAKIMLARIN SAVAŞI</div><h1 id="kazananYazisi">KAZANAN</h1><p id="savasOzeti"></p><div id="turSonuclari"></div><div id="sonucKartlari"></div><button class="altin" onclick="location.reload()">YENİ OYUN</button></div></section>
-<script src="database.js?v=3"></script>
-<script src="mezat-veriler.js?v=3"></script>
-<script src="ozellikler.js?v=3"></script><script src="buyuler.js?v=3"></script><script src="mezat-yayin-yukleyici.js?v=3"></script><script src="script.js?v=3"></script><script src="panel-yeni.js?v=3"></script>
-<script src="ana-menu.js?v=3"></script>
-<script src="oyun-modlari.js?v=3"></script>
-<script src="bot.js?v=3"></script>
-<script type="module" src="online.js?v=3"></script>
+<section id="sonucEkrani" class="giris ekran gizli"><div class="giris-kutu sonuc-kutu"><div class="kucuk-baslik">TAKIMLARIN SAVAŞI</div><h1 id="kazananYazisi">KAZANAN</h1><p id="savasOzeti"></p><div id="sonucEkstra" class="sonuc-ekstra"></div><div id="turSonuclari"></div><div id="sonucKartlari"></div><button id="rovansButonu" class="altin" onclick="rovans()">RÖVANŞ ⚔</button><button class="geri" onclick="location.reload()">ANA MENÜ</button></div></section>
+<script src="database.js?v=6"></script>
+<script src="mezat-veriler.js?v=6"></script>
+<script src="ozellikler.js?v=6"></script><script src="buyuler.js?v=6"></script><script src="savas-olaylari.js?v=6"></script><script src="pasifler.js?v=6"></script><script src="mezat-yayin-yukleyici.js?v=6"></script><script src="script.js?v=6"></script><script src="panel-yeni.js?v=6"></script>
+<script src="ana-menu.js?v=6"></script>
+<script src="oyun-modlari.js?v=6"></script>
+<script src="bot.js?v=6"></script>
+<script src="gelistirmeler.js?v=6"></script>
+<script src="teklif-suresi.js?v=6"></script>
+<script type="module" src="online.js?v=6"></script>
 </body></html>
