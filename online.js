@@ -139,3 +139,31 @@ function init(){makeUI();attachGuestControls();signInAnonymously(auth).then(u=>{
 // window.load sonrasinda baslatmak DOM kurulma yarisi sorununu onler.
 if(document.readyState==='complete') init();
 else window.addEventListener('load',init,{once:true});
+
+/* ONLINE MODU BUTONUNU AKTİFLEŞTİR */
+
+const onlineButonunuBagla = () => {
+  const buton = document.querySelector(
+    '#modSecimEkrani button[aria-label*="Online"], #modSecimEkrani .mod-kart:last-of-type'
+  );
+
+  if (!buton || !document.getElementById('onlineEkrani')) {
+    return false;
+  }
+
+  buton.disabled = false;
+  buton.setAttribute('aria-label', 'Online, oda oluştur veya katıl');
+
+  const durum = buton.querySelector('.mod-durum');
+  if (durum) durum.textContent = 'OYNA →';
+
+  buton.onclick = () => openOnline();
+
+  return true;
+};
+
+const onlineButonKontrol = setInterval(() => {
+  if (onlineButonunuBagla()) {
+    clearInterval(onlineButonKontrol);
+  }
+}, 150);
