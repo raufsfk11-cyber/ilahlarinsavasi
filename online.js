@@ -47,7 +47,7 @@ async function createRoom(){
 async function joinRoom(){
  try{await ensureAuth();let name=neatName($('onlineIsim').value),c=$('onlineKodGir').value.replace(/\s/g,'').toUpperCase();if(!name||!/^[A-Z2-9]{8}$/.test(c)){notice('Adını ve 8 karakterli kodu doğru gir.');return;}
  $('onlineKatil').disabled=true;let r=ref(db,'odalar/'+c),s=(await get(r)).val();if(!s){notice('Oda bulunamadı.');return;}if(s.status!=='waiting'){notice('Bu oda başlamış veya kapanmış.');return;}
- const joined=await runTransaction(ref(db,'odalar/'+c+'/guestUid'),v=>v===''?me.uid:undefined,{applyLocally:false});
+ const joined=await runTransaction(ref(db,'odalar/'+c+'/guestUid'),v=>(v===null||v==='')?me.uid:undefined,{applyLocally:false});
  if(!joined.committed){notice('Oda dolu.');return;}
  await set(ref(db,'odalar/'+c+'/guestName'),name);code=c;role='guest';waiting();watchRoom();notice('Bağlandın. Oda sahibinin başlatması bekleniyor.');
  }catch(e){error(e);}finally{$('onlineKatil').disabled=false;}
@@ -139,31 +139,3 @@ function init(){makeUI();attachGuestControls();signInAnonymously(auth).then(u=>{
 // window.load sonrasinda baslatmak DOM kurulma yarisi sorununu onler.
 if(document.readyState==='complete') init();
 else window.addEventListener('load',init,{once:true});
-
-/* ONLINE MODU BUTONUNU AKTİFLEŞTİR */
-
-const onlineButonunuBagla = () => {
-  const buton = document.querySelector(
-    '#modSecimEkrani button[aria-label*="Online"], #modSecimEkrani .mod-kart:last-of-type'
-  );
-
-  if (!buton || !document.getElementById('onlineEkrani')) {
-    return false;
-  }
-
-  buton.disabled = false;
-  buton.setAttribute('aria-label', 'Online, oda oluştur veya katıl');
-
-  const durum = buton.querySelector('.mod-durum');
-  if (durum) durum.textContent = 'OYNA →';
-
-  buton.onclick = () => openOnline();
-
-  return true;
-};
-
-const onlineButonKontrol = setInterval(() => {
-  if (onlineButonunuBagla()) {
-    clearInterval(onlineButonKontrol);
-  }
-}, 150);
