@@ -84,8 +84,8 @@
       if (uyum) parcalar.push(`${uyum > 0 ? '🤝 +' : '⚔️ '}${uyum} uyum`);
       aktifBuyulerAl().forEach(id => {
         const b = BUYULER[id];
-        if (etiketVar(k, b.etiket)) parcalar.push(`${b.simge} ${buyuSahibi(id) === i ? '+' : '−'}${BUYU_ETKISI} ${STAT_ADLARI[b.stat]}`);
-        if (Object.entries(BUYU_ZAAFLARI).some(([e, z]) => z.buyu === id && etiketVar(k, e))) parcalar.push(`${b.simge} −${BUYU_ETKISI} ${STAT_ADLARI[b.stat]} (zaaf)`);
+        if (etiketVar(k, b.etiket)) parcalar.push(`${b.simge} ${buyuSahibi(id) === i ? '+' + buyuBonusu(b) : '−' + buyuCezasi(b)} ${STAT_ADLARI[b.stat]}`);
+        if (Object.entries(BUYU_ZAAFLARI).some(([e, z]) => z.buyu === id && etiketVar(k, e))) parcalar.push(`${b.simge} −${buyuCezasi(b)} ${STAT_ADLARI[b.stat]} (zaaf)`);
       });
       const once = takimOzelligi(savasTakimi(i).takim);
       const t = takimlarAl().map(x => [...x]); t[i].push(k);

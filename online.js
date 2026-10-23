@@ -75,7 +75,7 @@ async function startMatch(){
 }
 function collectState(){
  const result={lot,sira,teklif,teklifSahibi,paslar:[...paslar],lotBitti,oyunBitti,animasyonDevamEdiyor,mezatModu,secimYapan,
- activeId:aktifKarakter?.id??null,buyuHavuzlari,buyuSecimleri,poolIds:havuz.map(k=>k.id),players:oyuncular.map(o=>({isim:o.isim,para:o.para,ids:o.takim.map(k=>k.id)})),spiker:$('spiker').textContent};
+ activeId:aktifKarakter?.id??null,buyuHavuzlari,buyuSecimleri,buyuTanimlari:Object.fromEntries(buyuHavuzlari.flat().filter(id=>BUYULER[id]).map(id=>[id,BUYULER[id]])),poolIds:havuz.map(k=>k.id),players:oyuncular.map(o=>({isim:o.isim,para:o.para,ids:o.takim.map(k=>k.id)})),spiker:$('spiker').textContent};
  if(oyunBitti)result.result={kazanan:$('kazananYazisi').textContent,ozet:$('savasOzeti').textContent,ekstra:[...$('sonucEkstra').children].map(p=>({text:p.textContent,cls:p.className})),turlar:[...$('turSonuclari').children].map(e=>({title:e.querySelector('strong')?.textContent||'',text:e.querySelector('p')?.textContent||'',skor:e.querySelector('.tur-skor')?.textContent||''})),takimlar:[...$('sonucKartlari').children].map(e=>({title:e.querySelector('strong')?.textContent||'',texts:[...e.querySelectorAll('p')].map(p=>p.textContent)}))};
  return result;
 }
@@ -97,6 +97,8 @@ function renderSnapshot(s){
  paslar=new Set(s.paslar||[]);lotBitti=s.lotBitti;oyunBitti=s.oyunBitti;animasyonDevamEdiyor=s.animasyonDevamEdiyor;
  mezatModu=s.mezatModu;secimYapan=s.secimYapan;
  // Firebase boş dizileri/elemanları silebilir; nesne olarak gelse de indeksle okunur.
+ // Oda sahibinin büyü tanımları geçerlidir (Büyü Atölyesi ayarları farklı olabilir).
+ Object.assign(BUYULER,s.buyuTanimlari||{});
  const h=s.buyuHavuzlari||[],bs=s.buyuSecimleri||{};buyuHavuzlari=[h[0]||[],h[1]||[]];buyuSecimleri=[bs[0]||'',bs[1]||''];
  $('onlineEkrani').classList.add('gizli');$('onlineEtiket').classList.remove('gizli');$('rovansButonu')?.classList.add('gizli');
  if(s.oyunBitti&&s.result){const r=s.result;$('kazananYazisi').textContent=r.kazanan;$('savasOzeti').textContent=r.ozet;

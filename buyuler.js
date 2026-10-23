@@ -10,6 +10,9 @@ const BUYULER = {
 // Büyüyle ilgisi olan ama sahibine göre değişmeyen özel zaaflar.
 const BUYU_ZAAFLARI = { 'kadin-korkusu': { buyu: 'kadin', etiketAdi: 'Kadınlardan çekinir' } };
 const BUYU_ETKISI = 20;
+// Büyü Atölyesi'nde her büyüye ayrı bonus/ceza verilebilir; verilmemişse varsayılan geçerli.
+const buyuBonusu = b => Number.isFinite(+b?.bonus) && b?.bonus !== null && b?.bonus !== '' ? +b.bonus : BUYU_ETKISI;
+const buyuCezasi = b => Number.isFinite(+b?.ceza) && b?.ceza !== null && b?.ceza !== '' ? +b.ceza : BUYU_ETKISI;
 const STAT_ADLARI = { guc: 'GÜÇ', savunma: 'SAVUNMA', hiz: 'HIZ', zeka: 'ZEKA' };
 const GORSEL_UZANTILARI = ['png', 'jpg', 'jpeg', 'webp'];
 // Online senkron için boş seçim null değil '' tutulur.
@@ -26,7 +29,9 @@ const oyuncuAdi = i => (typeof oyuncular !== 'undefined' && oyuncular[i]?.isim) 
 function buyuSecimiBaslat() {
   const anahtarlar = Object.keys(BUYULER);
   for (let i = anahtarlar.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [anahtarlar[i], anahtarlar[j]] = [anahtarlar[j], anahtarlar[i]]; }
-  buyuHavuzlari = [anahtarlar.slice(0, 2), anahtarlar.slice(2, 4)];
+  // Atölyede 4'ten az büyü kalmış olabilir: 3 → [2,1], 2 → [1,1], 1 veya 0 → bu oyunda büyü yok.
+  const ilk = anahtarlar.length >= 4 ? 2 : Math.ceil(anahtarlar.length / 2);
+  buyuHavuzlari = anahtarlar.length < 2 ? [[], []] : [anahtarlar.slice(0, ilk), anahtarlar.slice(ilk, ilk + 2)];
   buyuSecimleri = ['', ''];
   buyuEkraniKapandi = false;
 }
@@ -49,8 +54,8 @@ function buyuluTakim(index, takimlar) {
     const b = BUYULER[id], sahip = buyuSahibi(id);
     takim.forEach(k => {
       let fark = 0;
-      if (etiketVar(k, b.etiket)) fark = sahip === index ? BUYU_ETKISI : -BUYU_ETKISI;
-      Object.entries(BUYU_ZAAFLARI).forEach(([etiket, z]) => { if (z.buyu === id && etiketVar(k, etiket)) fark -= BUYU_ETKISI; });
+      if (etiketVar(k, b.etiket)) fark = sahip === index ? buyuBonusu(b) : -buyuCezasi(b);
+      Object.entries(BUYU_ZAAFLARI).forEach(([etiket, z]) => { if (z.buyu === id && etiketVar(k, etiket)) fark -= buyuCezasi(b); });
       if (!fark) return;
       k[b.stat] = Math.max(0, (Number(k[b.stat]) || 0) + fark);
       olaylar.push({ metin: `${b.simge} ${b.ad}: ${k.isim} ${fark > 0 ? '+' : ''}${fark} ${STAT_ADLARI[b.stat]}`, puan: fark });
@@ -98,7 +103,7 @@ function buyuAlaniniGuncelle() {
     const yazi = document.createElement('div');
     const ad = document.createElement('strong'), etki = document.createElement('small'), durum = document.createElement('small');
     ad.textContent = `${b.simge} ${b.ad} • ${oyuncuAdi(s).toLocaleUpperCase('tr-TR')}`;
-    etki.textContent = `${b.etiketAdi}: sahibine +${BUYU_ETKISI}, rakibe −${BUYU_ETKISI} ${STAT_ADLARI[b.stat]}`;
+    etki.textContent = `${b.etiketAdi}: sahibine +${buyuBonusu(b)}, rakibe −${buyuCezasi(b)} ${STAT_ADLARI[b.stat]}`;
     durum.textContent = `${oyuncular[s].isim}: ${buyuSayisi(t[s], id)} kişi (+) • ${oyuncular[1 - s].isim}: ${buyuSayisi(t[1 - s], id)} kişi (−)`;
     durum.className = 'buyu-durum';
     yazi.append(ad, etki, durum);
@@ -118,7 +123,7 @@ function karakterEtiketleriniGoster(k) {
     const b = BUYULER[buyuId], sahip = buyuSahibi(buyuId), chip = document.createElement('span');
     chip.className = 'etiket-chip' + (sahip !== -1 ? ' aktif' : '') + (BUYU_ZAAFLARI[etiket] ? ' zaaf' : '');
     chip.textContent = b.simge + ' ' + (BUYU_ZAAFLARI[etiket]?.etiketAdi || b.etiketAdi) + (sahip !== -1 ? ' • seçen: ' + oyuncuAdi(sahip) : '');
-    chip.title = sahip !== -1 ? `${b.ad}, ${oyuncuAdi(sahip)} tarafından seçildi. Onun takımında +${BUYU_ETKISI}, rakipte −${BUYU_ETKISI} ${STAT_ADLARI[b.stat]}.` : b.ad + ' büyüsü bu oyunda seçilmedi.';
+    chip.title = sahip !== -1 ? `${b.ad}, ${oyuncuAdi(sahip)} tarafından seçildi. Onun takımında +${buyuBonusu(b)}, rakipte −${buyuCezasi(b)} ${STAT_ADLARI[b.stat]}.` : b.ad + ' büyüsü bu oyunda seçilmedi.';
     alan.append(chip);
   });
 }
@@ -134,7 +139,7 @@ function buyuSecimKarti(id, tiklanabilir, oyuncu) {
     kart.onclick = () => buyuSec(oyuncu, id);
   }
   ad.textContent = b.simge + ' ' + b.ad;
-  etki.textContent = `${b.etiketAdi} karakterler • ${STAT_ADLARI[b.stat]} ±${BUYU_ETKISI}`;
+  etki.textContent = `${b.etiketAdi} karakterler • ${STAT_ADLARI[b.stat]} +${buyuBonusu(b)} / −${buyuCezasi(b)}`;
   kart.append(buyuGorseli(id, 'buyu-tanitim-gorsel'), ad, etki);
   return kart;
 }
@@ -164,7 +169,7 @@ function buyuSecimEkraniniGuncelle() {
   kartlar.className = 'buyu-tanitim-kartlar';
   if (sira === -1) {
     baslik.textContent = '🔮 ' + buyuSecimleri.map(id => BUYULER[id].ad).join(' VS ');
-    aciklama.textContent = `Büyünün sahibinin etiketli karakterleri +${BUYU_ETKISI}, rakipteki aynı karakterler −${BUYU_ETKISI} alır. Mezatta buna göre teklif ver!`;
+    aciklama.textContent = 'Büyünün sahibinin etiketli karakterleri bonus alır, rakipteki aynı karakterler ceza yer (puanlar kartlarda). Mezatta buna göre teklif ver!';
     buyuSecimleri.forEach((id, i) => {
       const kart = buyuSecimKarti(id, false, i), sahip = document.createElement('p');
       sahip.className = 'buyu-sahip';
@@ -175,7 +180,7 @@ function buyuSecimEkraniniGuncelle() {
   } else {
     baslik.textContent = benimSiram ? `${oyuncuAdi(sira).toLocaleUpperCase('tr-TR')}, BÜYÜNÜ SEÇ` : `${oyuncuAdi(sira).toLocaleUpperCase('tr-TR')} SEÇİYOR...`;
     aciklama.textContent = (sira === 1 ? `${oyuncuAdi(0)} ${BUYULER[buyuSecimleri[0]].simge} ${BUYULER[buyuSecimleri[0]].ad} seçti. ` : '') +
-      `Seçtiğin büyünün etiketli karakterleri senin takımında +${BUYU_ETKISI}, rakibinde −${BUYU_ETKISI} alır.`;
+      'Seçtiğin büyünün etiketli karakterleri senin takımında bonus alır, rakibinde ceza yer (puanlar kartlarda).';
     buyuHavuzlari[sira].forEach(id => kartlar.append(buyuSecimKarti(id, benimSiram, sira)));
   }
   kutu.append(ust, baslik, aciklama, kartlar);
