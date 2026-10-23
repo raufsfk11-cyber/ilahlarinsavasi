@@ -59,7 +59,6 @@ function watchRoom(){
  if(role==='host')$('onlineBaslat').classList.toggle('gizli',!room.guestUid||!room.guestName||room.status!=='waiting');
  if(room.status==='playing'&&room.state){if(role==='guest')renderSnapshot(room.state);else if(!hosting){hosting=true;}}
  if(room.status==='finished'&&room.state&&role==='guest')renderSnapshot(room.state);
- if(role==='guest')window.MezatSureGoster?.(room.status==='playing'?room.sure??null:null);
  },error);
  if(role==='host') watchRequests();
 }
@@ -75,21 +74,22 @@ async function startMatch(){
 }
 function collectState(){
  const result={lot,sira,teklif,teklifSahibi,paslar:[...paslar],lotBitti,oyunBitti,animasyonDevamEdiyor,mezatModu,secimYapan,
- activeId:aktifKarakter?.id??null,buyuHavuzlari,buyuSecimleri,buyuTanimlari:Object.fromEntries(buyuHavuzlari.flat().filter(id=>BUYULER[id]).map(id=>[id,BUYULER[id]])),poolIds:havuz.map(k=>k.id),players:oyuncular.map(o=>({isim:o.isim,para:o.para,ids:o.takim.map(k=>k.id)})),spiker:$('spiker').textContent};
+ activeId:aktifKarakter?.id??null,sureKalan:window.MezatSureKalan??null,buyuHavuzlari,buyuSecimleri,buyuTanimlari:Object.fromEntries(buyuHavuzlari.flat().filter(id=>BUYULER[id]).map(id=>[id,BUYULER[id]])),poolIds:havuz.map(k=>k.id),players:oyuncular.map(o=>({isim:o.isim,para:o.para,ids:o.takim.map(k=>k.id)})),spiker:$('spiker').textContent};
  if(oyunBitti)result.result={kazanan:$('kazananYazisi').textContent,ozet:$('savasOzeti').textContent,ekstra:[...$('sonucEkstra').children].map(p=>({text:p.textContent,cls:p.className})),turlar:[...$('turSonuclari').children].map(e=>({title:e.querySelector('strong')?.textContent||'',text:e.querySelector('p')?.textContent||'',skor:e.querySelector('.tur-skor')?.textContent||''})),takimlar:[...$('sonucKartlari').children].map(e=>({title:e.querySelector('strong')?.textContent||'',texts:[...e.querySelectorAll('p')].map(p=>p.textContent)}))};
  return result;
 }
 function startBroadcast(){if(!hosting||!code)return;
- let sent='',inFlight=false,sentSure;setInterval(async()=>{if(!hosting||!code||inFlight)return;
- // Kalan süre ayrı yolda: her saniye değişir, misafirin tüm ekranını yeniden çizdirmesin.
- const sure=window.MezatSureKalan??null;if(sure!==sentSure){sentSure=sure;set(ref(db,'odalar/'+code+'/sure'),sure).catch(()=>{});}
+ let sent='',inFlight=false;setInterval(async()=>{if(!hosting||!code||inFlight)return;
  const value=collectState(),data=JSON.stringify(value);if(data===sent)return;
  inFlight=true;try{await update(roomRef(),{status:value.oyunBitti?'finished':'playing',state:value});sent=data;}catch(e){console.warn(e);}finally{inFlight=false;}
  },260);
 }
 function renderSnapshot(s){
  if(!s?.players||s.players.length!==2)return;
- let serial=JSON.stringify(s);if(serial===localSequence)return;localSequence=serial;
+ // Kalan süre durumun içinde gelir (kurallar oda altında yeni alana izin vermiyor);
+ // her saniye değiştiği için ekranı yeniden çizdirmez, sadece sayaç güncellenir.
+ const {sureKalan,...durum}=s;window.MezatSureGoster?.(sureKalan??null);
+ let serial=JSON.stringify(durum);if(serial===localSequence)return;localSequence=serial;
  try{rendering=true;const byId=new Map(tumKarakterler.map(k=>[String(k.id),k]));
  oyuncular=s.players.map(p=>({isim:p.isim,para:p.para,takim:(p.ids||[]).map(id=>byId.get(String(id))).filter(Boolean)}));
  havuz=(s.poolIds||[]).map(id=>byId.get(String(id))).filter(Boolean);
@@ -112,6 +112,7 @@ function renderSnapshot(s){
  for(const b of $('teklifButonlari').querySelectorAll('button'))b.disabled=false;
  }
  $('onlineEtiket').textContent='ONLINE • '+code+' • '+(role==='guest'?'MİSAFİR':'ODA SAHİBİ');
+ window.MezatSureGoster?.(sureKalan??null);
  }catch(e){console.error('Online görünüm hatası',e);}finally{rendering=false;}
 }
 function guestAction(kind,n){if(role!=='guest'||!room||room.status!=='playing'||!room.state||requestLock)return;
@@ -120,8 +121,10 @@ function guestAction(kind,n){if(role!=='guest'||!room||room.status!=='playing'||
  else if(room.state.lotBitti&&kind!=='next')return;
  let allowed=kind==='buyu'||room.state.lotBitti|| (room.state.mezatModu==='acik'&&room.state.sira===1) || (room.state.mezatModu==='secim'&&room.state.secimYapan===1);
  if(!allowed)return;
- requestLock=true;const request={kind,n:Number(n)||0,lot:room.state.lot,turn:room.state.teklif,stamp:Date.now()};
- set(ref(db,'odalar/'+code+'/requests/'+me.uid),request).catch(error).finally(()=>setTimeout(()=>requestLock=false,450));
+ // Firebase kuralları yalnızca bilinen istek türlerini kabul ediyor; büyü seçimi 'choose' olarak gider,
+ // oda sahibi büyü seçimi beklenirken gelen 'choose' isteğini büyü seçimi sayar.
+ requestLock=true;const request={kind:kind==='buyu'?'choose':kind,n:Number(n)||0,lot:room.state.lot,turn:room.state.teklif,stamp:Date.now()};
+ set(ref(db,'odalar/'+code+'/requests/'+me.uid),request).catch(e=>{error(e);const sp=$('spiker');if(sp)sp.textContent='⚠ İstek gönderilemedi ('+(e?.code||e?.message||'bağlantı')+'). Tekrar dene.';}).finally(()=>setTimeout(()=>requestLock=false,450));
 }
 function watchRequests(){if(requestStop)requestStop();requestStop=onValue(ref(db,'odalar/'+code+'/requests'),s=>{
  if(!hosting||!room?.guestUid||!s.exists())return;
@@ -130,8 +133,8 @@ function watchRequests(){if(requestStop)requestStop();requestStop=onValue(ref(db
  if(r.kind==='bid'&&mezatModu==='acik'&&sira===1&&[1,2,5].includes(r.n)&&teklifVerebilir(1))teklifVer(r.n);
  else if(r.kind==='all'&&mezatModu==='acik'&&sira===1&&teklifVerebilir(1))hepsiniVer();
  else if(r.kind==='pass'&&mezatModu==='acik'&&sira===1&&teklifSahibi!==-1)pasGec();
+ else if(r.kind==='choose'&&buyuSecimleri[0]&&!buyuSecimleri[1]&&[0,1].includes(r.n))buyuSec(1,buyuHavuzlari[1][r.n]);
  else if(r.kind==='choose'&&mezatModu==='secim'&&secimYapan===1&&[0,1].includes(r.n))karakterSec(r.n);
- else if(r.kind==='buyu'&&[0,1].includes(r.n))buyuSec(1,buyuHavuzlari[1][r.n]);
  else if(r.kind==='next'&&lotBitti&&!animasyonDevamEdiyor){if(takimlarTamam())savasiBaslat();else yeniLot();}
  },error);}
 function attachGuestControls(){

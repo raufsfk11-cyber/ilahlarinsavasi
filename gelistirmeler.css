@@ -212,3 +212,18 @@ body:has(#buyuTanitim) #kisayolIpucu, body:has(#mezat-savas-overlay) #kisayolIpu
 /* SONUÇ: pasif satırı */
 .sonuc-ekstra .pasif { color: #8ff0cf; }
 #mezat-savas-overlay .ms-bilgi .pasif { background: #0b2a2a; border: 1px solid #3fb7a0; color: #c9f5e8; }
+
+/* BÜYÜ SEÇİMİNDE SÜRE */
+#buyuTanitim .buyu-sure {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 5px 14px;
+    border: 1px solid #7fb4c4;
+    border-radius: 999px;
+    background: #0e2430;
+    color: #dff4fb;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+#buyuTanitim .buyu-sure.kritik { border-color: #ff5c63; background: #4a1216; color: #ffd2d4; }
