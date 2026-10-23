@@ -125,7 +125,8 @@
       const ad = kart.querySelector('strong')?.textContent || `TUR ${i + 1}`;
       const sonuc = kart.querySelector('p')?.textContent || '';
       const isim = sonuc.replace(/^Kazanan:\s*/i, '').trim();
-      return { ad, isim, kazananIndex: isim === oyuncular[0].isim ? 0 : 1 };
+      const skor = kart.querySelector('.tur-skor')?.textContent || '';
+      return { ad, isim, skor, kazananIndex: isim === oyuncular[0].isim ? 0 : 1 };
     });
   }
 
@@ -185,7 +186,8 @@
     const bonusMetni = oyuncular.map(o => {
       if (typeof takimKimyasi !== 'function') return '';
       const kimya = takimKimyasi(o.takim);
-      return o.isim + ' • ' + (kimya.bonus >= 0 ? '+' : '') + kimya.bonus + ' takım uyumu';
+      const oz = typeof takimOzelligi === 'function' ? takimOzelligi(typeof savasTakimi === 'function' ? savasTakimi(oyuncular.indexOf(o)).takim : o.takim) : null;
+      return o.isim + ' • ' + (kimya.bonus >= 0 ? '+' : '') + kimya.bonus + ' takım uyumu' + (o.para ? ' • 💰 +' + o.para * (typeof PARA_GUC_BONUSU === 'number' ? PARA_GUC_BONUSU : 0) + ' GÜÇ' : '') + (oz ? ' • ' + oz.simge + ' ' + oz.ad : '');
     }).join('     |     ');
 
     function kapat() {
@@ -206,7 +208,8 @@
       if (asama === 0) {
         title.textContent = 'SAVAŞ BAŞLIYOR';
         sub.textContent = 'İki takım karşı karşıya. Üç turun galibi MEZAT şampiyonu olacak.';
-        story.textContent = 'Hazır mısınız? Takımlar kuruldu, dostluklar ve düşmanlıklar hesaplandı.';
+        const buyular = typeof buyuOzetiMetni === 'function' ? buyuOzetiMetni() : '';
+        story.textContent = 'Hazır mısınız? Takımlar kuruldu, dostluklar ve düşmanlıklar hesaplandı.' + (buyular ? ' 🔮 Büyüler: ' + buyular : '');
         button.textContent = '1. TURU GÖSTER →';
         blueScore.textContent = '0';
         redScore.textContent = '0';
@@ -217,7 +220,7 @@
         toplam[tur.kazananIndex]++;
         title.textContent = tur.ad.replace(/^TUR\s*\d+\s*•\s*/i, '');
         sub.textContent = `TUR ${asama} / 3`;
-        story.textContent = `🏆 Bu turun kazananı: ${tur.isim}. ${asama === 3 ? 'Final sonucu belli oluyor!' : 'Mücadele devam ediyor.'}`;
+        story.textContent = `🏆 Bu turun kazananı: ${tur.isim}${tur.skor ? ' (' + tur.skor + ')' : ''}. ${asama === 3 ? 'Final sonucu belli oluyor!' : 'Mücadele devam ediyor.'}`;
         blueScore.textContent = toplam[0];
         redScore.textContent = toplam[1];
         button.textContent = asama === 3 ? 'ZAFER EKRANI →' : 'SONRAKİ TUR →';

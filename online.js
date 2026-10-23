@@ -6,7 +6,7 @@ import {getAuth, signInAnonymously, onAuthStateChanged} from 'https://www.gstati
 import {getDatabase, ref, get, set, update, onValue, runTransaction, remove, serverTimestamp} from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js';
 const firebaseConfig={apiKey:'AIzaSyD8vlMADBYEteQp0sqU33EMb4sT8CsCx5c',authDomain:'ilahlarinsavasi-online.firebaseapp.com',databaseURL:'https://ilahlarinsavasi-online-default-rtdb.europe-west1.firebasedatabase.app',projectId:'ilahlarinsavasi-online',storageBucket:'ilahlarinsavasi-online.firebasestorage.app',messagingSenderId:'633894346707',appId:'1:633894346707:web:d5a4ee2b384f4954815926'};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
-let me=null,code='',role='',room=null,unsubscribe=null,requestStop=null,localSequence='',rendering=false,hosting=false,originals={},requestLock=false,lastRequest='';
+let me=null,code='',role='',room=null,unsubscribe=null,requestStop=null,localSequence='',rendering=false,hosting=false,originals={},requestLock=false,lastRequest='',buyuTanitildi=false;
 const $=id=>document.getElementById(id);
 const stateRef=()=>ref(db,'odalar/'+code+'/state');
 const roomRef=()=>ref(db,'odalar/'+code);
@@ -72,8 +72,8 @@ async function startMatch(){
 }
 function collectState(){
  const result={lot,sira,teklif,teklifSahibi,paslar:[...paslar],lotBitti,oyunBitti,animasyonDevamEdiyor,mezatModu,secimYapan,
- activeId:aktifKarakter?.id??null,poolIds:havuz.map(k=>k.id),players:oyuncular.map(o=>({isim:o.isim,para:o.para,ids:o.takim.map(k=>k.id)})),spiker:$('spiker').textContent};
- if(oyunBitti)result.result={kazanan:$('kazananYazisi').textContent,ozet:$('savasOzeti').textContent,turlar:[...$('turSonuclari').children].map(e=>({title:e.querySelector('strong')?.textContent||'',text:e.querySelector('p')?.textContent||''})),takimlar:[...$('sonucKartlari').children].map(e=>({title:e.querySelector('strong')?.textContent||'',texts:[...e.querySelectorAll('p')].map(p=>p.textContent)}))};
+ activeId:aktifKarakter?.id??null,buyular:aktifBuyuler,poolIds:havuz.map(k=>k.id),players:oyuncular.map(o=>({isim:o.isim,para:o.para,ids:o.takim.map(k=>k.id)})),spiker:$('spiker').textContent};
+ if(oyunBitti)result.result={kazanan:$('kazananYazisi').textContent,ozet:$('savasOzeti').textContent,turlar:[...$('turSonuclari').children].map(e=>({title:e.querySelector('strong')?.textContent||'',text:e.querySelector('p')?.textContent||'',skor:e.querySelector('.tur-skor')?.textContent||''})),takimlar:[...$('sonucKartlari').children].map(e=>({title:e.querySelector('strong')?.textContent||'',texts:[...e.querySelectorAll('p')].map(p=>p.textContent)}))};
  return result;
 }
 function startBroadcast(){if(!hosting||!code)return;
@@ -90,12 +90,12 @@ function renderSnapshot(s){
  havuz=(s.poolIds||[]).map(id=>byId.get(String(id))).filter(Boolean);
  aktifKarakter=byId.get(String(s.activeId));lot=s.lot;sira=s.sira;teklif=s.teklif;teklifSahibi=s.teklifSahibi;
  paslar=new Set(s.paslar||[]);lotBitti=s.lotBitti;oyunBitti=s.oyunBitti;animasyonDevamEdiyor=s.animasyonDevamEdiyor;
- mezatModu=s.mezatModu;secimYapan=s.secimYapan;
+ mezatModu=s.mezatModu;secimYapan=s.secimYapan;aktifBuyuler=s.buyular||[];
  $('onlineEkrani').classList.add('gizli');$('onlineEtiket').classList.remove('gizli');
  if(s.oyunBitti&&s.result){const r=s.result;$('kazananYazisi').textContent=r.kazanan;$('savasOzeti').textContent=r.ozet;
- const t=$('turSonuclari');t.replaceChildren();for(const obj of r.turlar){let d=document.createElement('div');d.className='tur-kart';let b=document.createElement('strong'),p=document.createElement('p');b.textContent=obj.title;p.textContent=obj.text;d.append(b,p);t.append(d);}
+ const t=$('turSonuclari');t.replaceChildren();for(const obj of r.turlar){let d=document.createElement('div');d.className='tur-kart';let b=document.createElement('strong'),p=document.createElement('p');b.textContent=obj.title;p.textContent=obj.text;d.append(b,p);if(obj.skor){let s=document.createElement('small');s.className='tur-skor';s.textContent=obj.skor;d.append(s);}t.append(d);}
  const a=$('sonucKartlari');a.replaceChildren();for(const obj of r.takimlar){let d=document.createElement('div');d.className='sonuc-kart';let b=document.createElement('strong');b.textContent=obj.title;d.append(b);for(const tx of obj.texts){let p=document.createElement('p');p.textContent=tx;d.append(p);}a.append(d);}ekranAc('sonucEkrani');}
- else if(aktifKarakter){ekranAc('mezatEkrani');$('spiker').textContent=s.spiker||'';arayuzuGuncelle();if(s.lotBitti){sonrakiLotButonuGoster();}else{butonlariYenile();}
+ else if(aktifKarakter){ekranAc('mezatEkrani');if(!buyuTanitildi&&aktifBuyuler.length){buyuTanitildi=true;buyuTanitimiGoster();}$('spiker').textContent=s.spiker||'';arayuzuGuncelle();if(s.lotBitti){sonrakiLotButonuGoster();}else{butonlariYenile();}
  // Misafir ekranında butonlar yerel durumu değiştiremez, sadece istek üretir.
  for(const b of $('teklifButonlari').querySelectorAll('button'))b.disabled=false;
  }

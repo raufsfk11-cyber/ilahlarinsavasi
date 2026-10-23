@@ -4,7 +4,7 @@ let oyuncular=[],havuz=[],tumKarakterler=[],tumIliskiler=[],aktifKarakter=null,a
 let lot=0,sira=0,teklif=0,teklifSahibi=-1,paslar=new Set(),lotBitti=false,oyunBitti=false,animasyonDevamEdiyor=false;
 let mezatModu='acik',secimYapan=-1;
 const fotoURLleri=new Map();
-async function verileriYukle(){tumKarakterler=await karakterleriGetir();tumIliskiler=await iliskileriGetir();el('havuzBilgisi').textContent='Kayıtlı karakter sayısı: '+tumKarakterler.length;}
+async function verileriYukle(){tumKarakterler=await karakterleriGetir();tumIliskiler=iliskileriSabitle(await iliskileriGetir());el('havuzBilgisi').textContent='Kayıtlı karakter sayısı: '+tumKarakterler.length;}
 verileriYukle().catch(e=>{console.error(e);el('havuzBilgisi').textContent='Karakterler yüklenemedi.';});
 function nadirlikSinifi(s){const n=String(s||'normal').toLocaleLowerCase('tr-TR');return ['nadir','epik','efsane'].includes(n)?n:'normal';}
 function ekranAc(id){document.querySelectorAll('.ekran').forEach(e=>e.classList.add('gizli'));el(id).classList.remove('gizli');if(id==='lobiEkrani')verileriYukle().catch(console.error);}
@@ -17,7 +17,8 @@ async function oyunuBaslat(){
  oyuncular=[isim1,isim2].map(isim=>({isim,para:BASLANGIC_PARASI,takim:[]}));
  havuz=[...tumKarakterler];for(let i=havuz.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[havuz[i],havuz[j]]=[havuz[j],havuz[i]];}
  lot=0;teklif=0;teklifSahibi=-1;paslar=new Set();lotBitti=false;oyunBitti=false;animasyonDevamEdiyor=false;
- ekranAc('mezatEkrani');yeniLot();
+ aktifBuyuler=buyuleriSec();
+ ekranAc('mezatEkrani');yeniLot();buyuTanitimiGoster();
 }
 function iliskiBul(a,b){return tumIliskiler.find(i=>(i.karakter1===a&&i.karakter2===b)||(i.karakter1===b&&i.karakter2===a));}
 function takimKimyasi(takim){let bonus=0;const olaylar=[];for(let i=0;i<takim.length;i++)for(let j=i+1;j<takim.length;j++){
@@ -82,8 +83,9 @@ function satinAlmaAnimasyonu(k,oyuncuIndex,slotIndex){
 function oyuncuGuncelle(index){const o=oyuncular[index],n=index+1;el('ad'+n).textContent=o.isim.toLocaleUpperCase('tr-TR');el('para'+n).textContent='₺'+o.para;
  el('paraBar'+n).style.width=Math.max(0,Math.min(100,o.para/BASLANGIC_PARASI*100))+'%';
  el('sira'+n).classList.toggle('kapali',lotBitti||index!==sira);
+ const oz=takimOzelligi(savasTakimi(index).takim),ozEt=el('ozellik'+n),paraNotu=`Harcanmayan ₺${o.para}, savaşta her karaktere +${o.para*PARA_GUC_BONUSU} GÜÇ verir.`;ozEt.textContent=oz?`${oz.simge} ${oz.ad} • OVR ${takimOverall(o.takim)} • 💰+${o.para*PARA_GUC_BONUSU} GÜÇ`:`💰 +${o.para*PARA_GUC_BONUSU} GÜÇ`;ozEt.title=oz?`${oz.stat} toplamı ${oz.toplamlar[oz.anahtar]}. ${oz.aciklama} ${TAKIM_OZELLIKLERI[oz.yener].stat} özelliğini yener. ${paraNotu}`:paraNotu;
  const alan=el('takim'+n);alan.replaceChildren();for(let i=0;i<TAKIM_LIMITI;i++){const d=document.createElement('div');d.className='yuva';d.dataset.slot=i;const k=o.takim[i];if(k){d.classList.add('dolu','nadirlik-'+nadirlikSinifi(k.nadirlik));d.title=k.isim;slotFotografiEkle(d,k);}else{d.textContent=String(i+1).padStart(2,'0');if(i===o.takim.length)d.classList.add('ilk-bos');}alan.append(d);}}
-function iliskiUyarilariniGoster(){const alan=el('iliskiUyarilari');alan.replaceChildren();let count=0;oyuncular.forEach(o=>o.takim.forEach(k=>{const il=iliskiBul(aktifKarakter.id,k.id);if(!il)return;count++;const p=Number(il.bonus)||0,poz=p>=0,d=document.createElement('div');d.className='iliski-uyari '+(poz?'dostluk':'rekabet');const strong=document.createElement('strong');strong.textContent=(poz?'🤝 ':'⚔️ ')+(p>0?'+':'')+p+' • '+k.isim;const t=document.createElement('p');t.textContent=o.isim+' takımında '+k.isim+' var. Aynı takıma katılırsa '+(poz?'dostluk bonusu':'uyum cezası')+' uygulanır. Neden: '+(il.neden||'');d.append(strong,t);alan.append(d);}));if(!count)alan.textContent='Mevcut takımlarla bilinen ilişki yok.';}
+function iliskiUyarilariniGoster(){const alan=el('iliskiUyarilari');alan.replaceChildren();let count=0;oyuncular.forEach(o=>o.takim.forEach(k=>{const il=iliskiBul(aktifKarakter.id,k.id);if(!il)return;count++;const p=Number(il.bonus)||0,poz=p>=0,d=document.createElement('div');d.className='iliski-uyari '+(poz?'dostluk':'rekabet');const strong=document.createElement('strong');const tip=ILISKI_TURLERI[il.tur];strong.textContent=(tip?tip.simge+' '+tip.ad+' ':poz?'🤝 ':'⚔️ ')+(p>0?'+':'')+p+' • '+k.isim;const t=document.createElement('p');t.textContent=o.isim+' takımında '+k.isim+' var. Aynı takıma katılırsa '+(poz?'dostluk bonusu':'uyum cezası')+' uygulanır. Neden: '+(il.neden||'');d.append(strong,t);alan.append(d);}));if(!count)alan.textContent='Mevcut takımlarla bilinen ilişki yok.';}
 function istatistikGoster(ad,value){const n=Number(value)||0;el(ad).textContent=n;el(ad+'Bar').style.width=Math.min(100,Math.max(0,n))+'%';}
 function karakterTemasi(k){
  const bil=el('karakterBilgi');bil.classList.remove('tema-neon-mor','tema-kirmizi','tema-mavi','tema-altin','tema-yesil');
@@ -101,17 +103,26 @@ function arayuzuGuncelle(){oyuncuGuncelle(0);oyuncuGuncelle(1);const k=aktifKara
  karakterTemasi(k);el('kartKategori').textContent=k.kategori||'KARAKTER';el('kartNadirlik').textContent=k.nadirlik||'NORMAL';
  const lotMetin='LOT '+String(lot).padStart(2,'0');el('kartLot').textContent=lotMetin;el('lotUst').textContent=lotMetin;el('lotSayaci').textContent='LOT '+lot+' / '+tumKarakterler.length;
  el('karakterHikaye').textContent=k.hikaye||'Henüz hikâye eklenmemiş.';
- ['guc','savunma','hiz','zeka'].forEach(key=>istatistikGoster(key,k[key]));el('fiyatYazisi').textContent='₺'+teklif;el('teklifVeren').textContent=teklifSahibi===-1?'Henüz teklif yok':oyuncular[teklifSahibi].isim;
+ ['guc','savunma','hiz','zeka'].forEach(key=>istatistikGoster(key,k[key]));istatistikGoster('overall',overallAl(k));el('fiyatYazisi').textContent='₺'+teklif;el('teklifVeren').textContent=teklifSahibi===-1?'Henüz teklif yok':oyuncular[teklifSahibi].isim;
  el('siraYazisi').textContent=lotBitti?'KARAKTER DAĞITILDI':mezatModu==='secim'?'SEÇİM: '+oyuncular[secimYapan].isim.toLocaleUpperCase('tr-TR'):mezatModu==='otomatik'?'OTOMATİK DAĞITIM':'SIRA: '+oyuncular[sira].isim.toLocaleUpperCase('tr-TR');
+ el('kartOvr').textContent=overallAl(k);karakterEtiketleriniGoster(k);buyuAlaniniGuncelle();
  iliskiUyarilariniGoster();if(!lotBitti)butonlariYenile();
 }
 const savasTurlari=[{ad:'SALDIRI ÇATIŞMASI',agirlik:{guc:1.5,savunma:.35,hiz:.7,zeka:.3}},{ad:'SAVUNMA VE TAKTİK',agirlik:{guc:.35,savunma:1.5,hiz:.3,zeka:.75}},{ad:'SON KARŞILAŞMA',agirlik:{guc:.7,savunma:.45,hiz:1.2,zeka:.9}}];
-function performansHesapla(o,t){const a=t.agirlik;let p=0;o.takim.forEach(k=>p+=(Number(k.guc)||0)*a.guc+(Number(k.savunma)||0)*a.savunma+(Number(k.hiz)||0)*a.hiz+(Number(k.zeka)||0)*a.zeka);return p+takimKimyasi(o.takim).bonus+(Math.random()*60-30)*o.takim.length;}
+// Harcanmayan her ₺, savaşta takımdaki her karaktere bu kadar GÜÇ verir.
+const PARA_GUC_BONUSU=1;
+// Büyüler ve artan para uygulanmış takım kopyası; asıl kayıtlar değişmez.
+function savasTakimi(i){const b=buyuluTakim(i,takimlarAl()),paraBonusu=oyuncular[i].para*PARA_GUC_BONUSU;if(paraBonusu)b.takim.forEach(k=>k.guc=(Number(k.guc)||0)+paraBonusu);return {...b,paraBonusu};}
+// Takım özelliği yalnızca stat puanını çarpar; ilişki bonusu ve şans sabit kalır.
+function performansHesapla(o,t,turIndex,rakip){const a=t.agirlik;let p=0;o.takim.forEach(k=>p+=(Number(k.guc)||0)*a.guc+(Number(k.savunma)||0)*a.savunma+(Number(k.hiz)||0)*a.hiz+(Number(k.zeka)||0)*a.zeka);
+ p*=ozellikCarpani(takimOzelligi(o.takim)?.anahtar,takimOzelligi(rakip.takim)?.anahtar,turIndex);return p+takimKimyasi(o.takim).bonus+(Math.random()*60-30)*o.takim.length;}
 function savasiBaslat(){if(oyunBitti||animasyonDevamEdiyor)return;if(!takimlarTamam()){alert('Savaş için iki takımın da 5 karakteri olmalı.');return;}oyunBitti=true;
- const kazan=[0,0],sonuclar=[];savasTurlari.forEach((tur,i)=>{const a=performansHesapla(oyuncular[0],tur),b=performansHesapla(oyuncular[1],tur);const kim=a===b?(Math.random()<.5?0:1):(a>b?0:1);kazan[kim]++;sonuclar.push({ad:tur.ad,tur:i+1,kazanan:oyuncular[kim].isim});});
+ // Savaş, büyüler ve artan para uygulanmış takım kopyalarıyla yapılır.
+ const buyulu=[0,1].map(savasTakimi),savascilar=oyuncular.map((o,i)=>({...o,takim:buyulu[i].takim}));
+ const kazan=[0,0],sonuclar=[];savasTurlari.forEach((tur,i)=>{const a=performansHesapla(savascilar[0],tur,i,savascilar[1]),b=performansHesapla(savascilar[1],tur,i,savascilar[0]);const kim=a===b?(Math.random()<.5?0:1):(a>b?0:1);kazan[kim]++;sonuclar.push({ad:tur.ad,tur:i+1,kazanan:oyuncular[kim].isim,skor:[a,b].map(Math.round)});});
  const kazanan=kazan[0]>kazan[1]?0:1;el('kazananYazisi').textContent='🏆 '+oyuncular[kazanan].isim.toLocaleUpperCase('tr-TR')+' KAZANDI!';el('savasOzeti').textContent=oyuncular[0].isim+' '+kazan[0]+' - '+kazan[1]+' '+oyuncular[1].isim;
- const turAlan=el('turSonuclari');turAlan.replaceChildren();sonuclar.forEach(t=>{const d=document.createElement('div');d.className='tur-kart';const b=document.createElement('strong'),p=document.createElement('p');b.textContent='TUR '+t.tur+' • '+t.ad;p.textContent='Kazanan: '+t.kazanan;d.append(b,p);turAlan.append(d);});
- const alan=el('sonucKartlari');alan.replaceChildren();oyuncular.forEach(o=>{const d=document.createElement('div');d.className='sonuc-kart';const b=document.createElement('strong'),p=document.createElement('p');b.textContent=o.isim.toLocaleUpperCase('tr-TR');p.textContent='Takım: '+o.takim.map(k=>k.isim).join(', ');d.append(b,p);const kimya=takimKimyasi(o.takim);if(!kimya.olaylar.length){const e=document.createElement('p');e.textContent='Etkinleşen dostluk veya düşmanlık yok.';d.append(e);}kimya.olaylar.forEach(item=>{const e=document.createElement('p');e.textContent=(item.puan>=0?'🤝 ':'⚔️ ')+item.metin;d.append(e);});alan.append(d);});ekranAc('sonucEkrani');}
+ const turAlan=el('turSonuclari');turAlan.replaceChildren();sonuclar.forEach(t=>{const d=document.createElement('div');d.className='tur-kart';const b=document.createElement('strong'),p=document.createElement('p');b.textContent='TUR '+t.tur+' • '+t.ad;p.textContent='Kazanan: '+t.kazanan;const s=document.createElement('small');s.className='tur-skor';s.textContent=`${oyuncular[0].isim} ${t.skor[0]} – ${t.skor[1]} ${oyuncular[1].isim}`;d.append(b,p,s);turAlan.append(d);});
+ const alan=el('sonucKartlari');alan.replaceChildren();oyuncular.forEach((o,oi)=>{const d=document.createElement('div');d.className='sonuc-kart';const b=document.createElement('strong'),p=document.createElement('p');b.textContent=o.isim.toLocaleUpperCase('tr-TR');p.textContent='Takım: '+o.takim.map(k=>k.isim).join(', ');d.append(b,p);const oz=takimOzelligi(savascilar[oi].takim),rakipOz=takimOzelligi(savascilar[1-oi].takim),ozP=document.createElement('p');ozP.textContent=`${oz.simge} Takım özelliği: ${oz.ad} (${oz.stat} ${oz.toplamlar[oz.anahtar]}) • ${ozellikEtkisiMetni(oz.anahtar,rakipOz.anahtar)}`;const ovP=document.createElement('p');ovP.textContent='Takım overall ortalaması: '+takimOverall(o.takim);d.append(ozP,ovP);if(buyulu[oi].paraBonusu){const e=document.createElement('p');e.textContent=`💰 Artan ₺${o.para}: her karaktere +${buyulu[oi].paraBonusu} GÜÇ`;d.append(e);}buyulu[oi].olaylar.forEach(item=>{const e=document.createElement('p');e.textContent='🔮 '+item.metin;d.append(e);});const kimya=takimKimyasi(o.takim);if(!kimya.olaylar.length){const e=document.createElement('p');e.textContent='Etkinleşen dostluk veya düşmanlık yok.';d.append(e);}kimya.olaylar.forEach(item=>{const e=document.createElement('p');e.textContent=(item.puan>=0?'🤝 ':'⚔️ ')+item.metin;d.append(e);});alan.append(d);});ekranAc('sonucEkrani');}
 
 /* =========================================
    MEZAT - TEKLIF PANELI EFEKTLERI

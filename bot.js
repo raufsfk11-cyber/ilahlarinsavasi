@@ -12,6 +12,11 @@
 
   function el(id) { return document.getElementById(id); }
   function sayi(v) { return Number(v) || 0; }
+  // Aktif büyüden etkilenen karakterler bot için daha değerlidir.
+  function buyuDegeri(k) {
+    if (typeof aktifBuyuler === 'undefined' || typeof etiketVar !== 'function') return 0;
+    return aktifBuyuler.reduce((t, id) => t + (etiketVar(k, BUYULER[id].etiket) ? 8 : 0) - (id === 'kadin' && etiketVar(k, 'kadin-korkusu') ? 8 : 0), 0);
+  }
   function havuzKalan() {
     return typeof havuz !== 'undefined' ? havuz.length : 0;
   }
@@ -25,7 +30,7 @@
   function ihtiyac(k) {
     const bot = oyuncular[1];
     const insan = oyuncular[0];
-    const ort = (sayi(k.guc) + sayi(k.savunma) + sayi(k.hiz) + sayi(k.zeka)) / 4;
+    const ort = (typeof overallAl === 'function' ? overallAl(k) : (sayi(k.guc) + sayi(k.savunma) + sayi(k.hiz) + sayi(k.zeka)) / 4) + buyuDegeri(k);
     const dostluk = iliskiKatkisi(k, bot.takim);
     const rakipIliski = iliskiKatkisi(k, insan.takim);
     const kalanSlot = Math.max(1, 5 - bot.takim.length);
@@ -74,7 +79,7 @@
         if (!benimBos) return karakterSec(0);
         if (!rakipBos) return karakterSec(1);
         const kimya = iliskiKatkisi(aktifKarakter, oyuncular[1].takim);
-        const ort = (sayi(aktifKarakter.guc) + sayi(aktifKarakter.savunma) + sayi(aktifKarakter.hiz) + sayi(aktifKarakter.zeka)) / 4;
+        const ort = (typeof overallAl === 'function' ? overallAl(aktifKarakter) : (sayi(aktifKarakter.guc) + sayi(aktifKarakter.savunma) + sayi(aktifKarakter.hiz) + sayi(aktifKarakter.zeka)) / 4) + buyuDegeri(aktifKarakter);
         const al = (ort + kimya * .5) > (zorluk === 'zor' ? 59 : zorluk === 'orta' ? 52 : 46);
         return karakterSec(al ? 1 : 0);
       }

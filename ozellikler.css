@@ -1,0 +1,144 @@
+/* OVERALL ve TAKIM ÖZELLİĞİ görünümü */
+#mezatEkrani .stat-overall {
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #4d5a5c;
+}
+
+#mezatEkrani .stat-overall strong {
+    font-size: 26px;
+    color: #f6d78f;
+}
+
+#mezatEkrani .stat-overall .stat-arka > div {
+    background: linear-gradient(90deg, #3fa58f, #8ff0cf);
+}
+
+#mezatEkrani .yeni-hud .takim-ozellik-etiket {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 3px 7px;
+    border: 1px solid var(--masa-rengi, #b99a5e);
+    border-radius: 4px;
+    background: #0b1b25cc;
+    color: #f1dca8;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: .5px;
+    white-space: nowrap;
+    cursor: help;
+}
+
+#mezatEkrani .stat-not {
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+}
+
+/* KART OVR ROZETİ */
+#mezatEkrani .kart-ovr {
+    position: absolute;
+    left: 8px;
+    bottom: 10px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    min-width: 58px;
+    padding: 4px 8px;
+    background: #101b1d;
+    border: 1px solid #b6904f;
+    color: #e9ca8d;
+    line-height: 1;
+}
+
+#mezatEkrani .kart-ovr small { font-size: 11px; letter-spacing: 1px; }
+#mezatEkrani .kart-ovr strong { font-size: 28px; color: #f6d78f; }
+
+/* BÜYÜ ETİKETLERİ */
+#mezatEkrani .karakter-etiketleri {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 4px 0 10px;
+}
+
+#mezatEkrani .etiket-chip {
+    padding: 3px 9px;
+    border: 1px solid #4d5f63;
+    border-radius: 999px;
+    background: #0d1c24cc;
+    color: #8fa3a8;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#mezatEkrani .etiket-chip.aktif { border-color: #c79bff; color: #f2e4ff; background: #3a1f5acc; box-shadow: 0 0 12px #b56cff55; }
+#mezatEkrani .etiket-chip.aktif.zaaf { border-color: #ff7b7b; background: #4a1b1bcc; color: #ffd9d9; }
+
+/* MEZAT BÜYÜ KARTLARI */
+#mezatEkrani .buyu-alani {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+#mezatEkrani .buyu-kart {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border: 1px solid #5b4a78;
+    border-radius: 8px;
+    background: #160f24cc;
+}
+
+#mezatEkrani .buyu-kart.etkiler { border-color: #c79bff; box-shadow: 0 0 16px #b56cff44; }
+#mezatEkrani .buyu-kart strong { display: block; color: #f2e4ff; font-size: 17px; }
+#mezatEkrani .buyu-kart small { display: block; color: #b9aacd; font-size: 13px; line-height: 1.35; }
+#mezatEkrani .buyu-kart .buyu-durum { color: #e9ca8d; font-weight: 800; }
+
+.buyu-gorsel, .buyu-tanitim-gorsel {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #24183a;
+}
+
+.buyu-gorsel { width: 54px; height: 54px; font-size: 30px; }
+.buyu-gorsel img, .buyu-tanitim-gorsel img { width: 100%; height: 100%; object-fit: cover; }
+
+/* OYUN BAŞI BÜYÜ TANITIMI */
+#buyuTanitim {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    overflow-y: auto;
+    background: radial-gradient(circle at 50% 30%, #2a1645ee, #07101aee 70%);
+}
+
+#buyuTanitim .buyu-tanitim-kutu {
+    width: min(640px, 100%);
+    padding: 26px;
+    border: 1px solid #b58cff;
+    border-radius: 15px;
+    background: #0f0b1c;
+    text-align: center;
+    box-shadow: 0 18px 80px #000b;
+}
+
+#buyuTanitim h1 { margin: 8px 0; color: #e8d2ff; font-size: clamp(28px, 5vw, 44px); }
+#buyuTanitim p { color: #c4b6d6; font-size: 17px; line-height: 1.4; }
+#buyuTanitim .buyu-tanitim-kartlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 18px 0; }
+#buyuTanitim .buyu-tanitim-kart { padding: 14px; border: 1px solid #5b4a78; border-radius: 10px; background: #1a1230; }
+#buyuTanitim .buyu-tanitim-kart strong { display: block; margin-top: 10px; color: #f2e4ff; font-size: 22px; }
+#buyuTanitim .buyu-tanitim-kart p { margin: 6px 0 0; font-size: 15px; }
+#buyuTanitim .buyu-tanitim-gorsel { width: 100%; aspect-ratio: 1; font-size: 80px; }
+#buyuTanitim button { width: 100%; padding: 14px; font-size: 20px; }
+
+/* TUR SKORU */
+.tur-kart .tur-skor { display: block; margin-top: 4px; color: #9fb3ba; }
