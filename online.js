@@ -135,4 +135,7 @@ function attachGuestControls(){
  },true);
 }
 function init(){makeUI();attachGuestControls();signInAnonymously(auth).then(u=>{me=u.user;notice('Bağlantı hazır.');}).catch(error);}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+// Online mod, oyun-modlari.js tarafindan DOMContentLoaded'da olusturulur.
+// window.load sonrasinda baslatmak DOM kurulma yarisi sorununu onler.
+if(document.readyState==='complete') init();
+else window.addEventListener('load',init,{once:true});
