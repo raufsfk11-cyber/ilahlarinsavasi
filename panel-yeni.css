@@ -1,0 +1,75 @@
+/* YALNIZCA ÜST PANEL. Önceki hud.css ve animasyonlar korunur. */
+#mezatEkrani .arena-hud {
+ --masa-rengi:#bc65ff;--masa-aura:rgba(188,101,255,.23);
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(245px,24%) minmax(0,1fr)!important;
+ gap:0!important;align-items:stretch;min-height:102px!important;
+ padding:5px 8px!important;background:#0b1012!important;border-bottom:3px solid #07090a;
+ box-shadow:0 5px 0 #050708,0 12px 24px #0008;isolation:isolate;
+}
+#mezatEkrani .arena-hud .arena-oyuncu {
+ background:linear-gradient(110deg,#252820,#1d211c 55%,#25271f)!important;
+ border:1px solid #474738!important;border-radius:0!important;
+ padding:9px 12px!important;gap:12px!important;min-height:91px!important;
+ box-shadow:inset 0 0 15px #0007;
+}
+#mezatEkrani .arena-hud .arena-oyuncu-1 {border-left:7px solid #458bdd!important}
+#mezatEkrani .arena-hud .arena-oyuncu-2 {border-right:7px solid #d65235!important;background:linear-gradient(270deg,#3f2b21,#25251e 65%,#23251e)!important}
+#mezatEkrani .arena-hud .oyuncu-kimlik {gap:10px!important;flex-shrink:0}
+#mezatEkrani .arena-hud .avatar {background:#244e83!important;border:2px solid #527fb2!important;border-radius:9px!important;width:44px!important;height:44px!important;flex-basis:44px!important;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);font-size:18px!important}
+#mezatEkrani .arena-hud .arena-oyuncu-2 .avatar {background:#833722!important;border-color:#b95b37!important}
+#mezatEkrani .arena-hud .oyuncu-detay h3 {color:#f4edda!important;font-size:14px!important;letter-spacing:1px;max-width:145px}
+#mezatEkrani .arena-hud .para-satiri strong {color:#f2ecd8!important;font-size:29px!important}
+#mezatEkrani .arena-hud .para-bar {background:#33372f!important;width:clamp(48px,5vw,92px)!important;height:10px!important}
+#mezatEkrani .arena-hud .para-dolum {background:#5089d2!important}
+#mezatEkrani .arena-hud .arena-oyuncu-2 .para-dolum {background:#d95235!important}
+#mezatEkrani .arena-hud .sira-etiketi {background:transparent!important;border:0!important;color:var(--masa-rengi)!important;font-size:9px}
+#mezatEkrani .arena-hud .takim {gap:5px!important;justify-content:center!important}
+#mezatEkrani .arena-hud .yuva {width:clamp(36px,3.6vw,66px)!important;height:clamp(44px,4.6vw,78px)!important;flex-basis:clamp(36px,3.6vw,66px)!important;border:1px solid #595747!important;border-radius:1px!important;background:radial-gradient(#3b3e34 1px,transparent 1px),#20221c!important;background-size:9px 9px!important;color:#aaa493!important;box-shadow:inset 0 0 9px #0009!important}
+#mezatEkrani .arena-hud .yuva.ilk-bos {border-color:var(--masa-rengi)!important;box-shadow:0 0 0 1px var(--masa-rengi),0 0 16px var(--masa-aura)!important}
+#mezatEkrani .arena-hud .yuva.dolu.nadirlik-normal {border-color:#9a9690!important}
+#mezatEkrani .arena-hud .yuva.dolu.nadirlik-nadir {border-color:#57aef4!important}
+#mezatEkrani .arena-hud .yuva.dolu.nadirlik-epik {border-color:#b46cf3!important}
+#mezatEkrani .arena-hud .yuva.dolu.nadirlik-efsane {border-color:#e9c36a!important}
+#mezatEkrani .arena-hud .arena-merkez {position:relative;z-index:2;margin:0!important;padding:6px 10px!important;min-width:0;border:1px solid #535244!important;border-bottom:3px solid var(--masa-rengi)!important;border-radius:0!important;background:linear-gradient(100deg,#20251d,#171c1b 40%,#25251b)!important;box-shadow:inset 0 0 22px var(--masa-aura)!important;display:flex!important;flex-direction:column;align-items:center;justify-content:center}
+#mezatEkrani .arena-hud .arena-logo-satir {display:flex;justify-content:center;align-items:center;gap:10px}
+#mezatEkrani .arena-hud .arena-merkez h1 {font-size:clamp(23px,2vw,36px)!important;color:#fff0bd!important;letter-spacing:-1px!important;text-shadow:2px 2px 0 #8a431d,0 0 12px var(--masa-rengi)!important;margin:0!important;white-space:nowrap}
+#mezatEkrani .arena-hud .arena-merkez h1 span {font-size:.8em;color:var(--masa-rengi)}
+#mezatEkrani .arena-hud .arena-sus {color:var(--masa-rengi);font-size:18px}
+#mezatEkrani .arena-hud .arena-sayac-satir {display:flex;align-items:center;justify-content:center;gap:7px;max-width:100%;flex-wrap:wrap;margin:3px 0;font-family:monospace;font-size:10px;color:#d8d4bd;letter-spacing:.5px;text-align:center}
+#mezatEkrani .arena-hud .arena-ayirac {color:var(--masa-rengi)}
+#mezatEkrani .arena-hud .arena-tur-cubuklari {display:flex;gap:4px;width:90%;max-width:280px;margin:3px 0 0}
+#mezatEkrani .arena-hud .arena-tur-cubuklari span {flex:1;height:5px;border-radius:4px;background:#484b40}
+#mezatEkrani .arena-hud .arena-tur-cubuklari span.tamam {background:var(--masa-rengi);opacity:.9}
+#mezatEkrani .arena-hud .arena-tur-cubuklari span.simdiki {outline:1px solid var(--masa-rengi);box-shadow:0 0 8px var(--masa-rengi)}
+#mezatEkrani .arena-hud .arena-merkez small {display:none!important}
+@media (max-width:1400px) {
+ #mezatEkrani .arena-hud {grid-template-columns:minmax(0,1fr) 205px minmax(0,1fr)!important}
+ #mezatEkrani .arena-hud .arena-oyuncu {gap:6px!important;padding:7px 5px!important}
+ #mezatEkrani .arena-hud .oyuncu-kimlik {gap:5px!important}
+ #mezatEkrani .arena-hud .avatar {width:35px!important;height:35px!important;flex-basis:35px!important}
+ #mezatEkrani .arena-hud .yuva {width:38px!important;height:49px!important;flex-basis:38px!important}
+ #mezatEkrani .arena-hud .oyuncu-detay h3 {font-size:12px!important;max-width:105px}
+ #mezatEkrani .arena-hud .para-satiri strong {font-size:23px!important}
+}
+@media (max-width:1100px) {
+ #mezatEkrani .arena-hud {grid-template-columns:1fr 1fr!important}
+ #mezatEkrani .arena-hud .arena-merkez {grid-column:1 / -1;grid-row:1;min-height:70px}
+ #mezatEkrani .arena-hud .arena-oyuncu-1 {grid-column:1;grid-row:2}
+ #mezatEkrani .arena-hud .arena-oyuncu-2 {grid-column:2;grid-row:2}
+}
+@media (max-width:560px) {
+ #mezatEkrani .arena-hud .arena-oyuncu {flex-direction:column;align-items:center;gap:4px!important}
+ #mezatEkrani .arena-hud .yuva {width:clamp(27px,7vw,38px)!important;height:40px!important;flex-basis:clamp(27px,7vw,38px)!important}
+ #mezatEkrani .arena-hud .arena-oyuncu .avatar {display:none}
+}
+
+/* OYUNCU İSİMLERİNİ BÜYÜT */
+
+#mezatEkrani .oyuncu-detay h3,
+#mezatEkrani #ad1,
+#mezatEkrani #ad2 {
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    max-width: none !important;
+}

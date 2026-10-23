@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MEZAT | Arkadaş Savaşları</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="hud.css">
+<link rel="stylesheet" href="panel-yeni.css">
+<link rel="stylesheet" href="ana-menu.css">
+</head>
+<body>
+<section id="anaEkran" class="giris ekran mezat-ana-menu">
+  <div class="menu-atmosfer" aria-hidden="true"></div>
+  <div class="menu-kart-sahnesi menu-kart-sol" aria-hidden="true">
+    <div class="menu-kart" data-menu-kart="0"><div class="menu-kart-ic"><span class="menu-kart-yuz menu-kart-on"></span><span class="menu-kart-yuz menu-kart-arka">✦</span></div></div>
+    <div class="menu-kart" data-menu-kart="1"><div class="menu-kart-ic"><span class="menu-kart-yuz menu-kart-on"></span><span class="menu-kart-yuz menu-kart-arka">✦</span></div></div>
+  </div>
+  <div class="menu-icerik">
+    <div class="menu-ust-kod">1 VS 1 <span>◆</span> KARAKTER MEZATI</div>
+    <h1 class="menu-baslik" data-text="ILAHLARIN SAVASI">ILAHLARIN SAVASI</h1>
+    <div class="menu-alt-cizgi" aria-hidden="true"></div>
+    <p class="menu-slogan">ARKADAŞINI SEÇ. TAKIMINI KUR. SAVAŞI KAZAN.</p>
+    <div class="menu-eylem">
+      <button class="menu-baslat" onclick="ekranAc('lobiEkrani')">OYUNA BAŞLA <span aria-hidden="true">➜</span></button>
+      <button class="menu-yonetim" onclick="location.href='karakterler.html'">KARAKTER YÖNETİMİ</button>
+    </div>
+    <div class="menu-istatistikler" aria-label="Oyun bilgileri">
+      <div><strong id="menuKarakterSayisi">15</strong><span>KARAKTER</span></div>
+      <div><strong>₺20</strong><span>BAŞLANGIÇ BÜTÇESİ</span></div>
+      <div><strong>5 VS 5</strong><span>TAKIM SAVAŞI</span></div>
+    </div>
+    <p class="menu-bilgi">Kimin geleceğini ancak açık artırmada öğreneceksin.</p>
+  </div>
+  <div class="menu-kart-sahnesi menu-kart-sag" aria-hidden="true">
+    <div class="menu-kart" data-menu-kart="2"><div class="menu-kart-ic"><span class="menu-kart-yuz menu-kart-on"></span><span class="menu-kart-yuz menu-kart-arka">✦</span></div></div>
+    <div class="menu-kart" data-menu-kart="3"><div class="menu-kart-ic"><span class="menu-kart-yuz menu-kart-on"></span><span class="menu-kart-yuz menu-kart-arka">✦</span></div></div>
+  </div>
+</section>
+<section id="lobiEkrani" class="giris ekran gizli"><div class="giris-kutu"><div class="kucuk-baslik">OYUNCULARI BELİRLE</div><h1>1 VS 1</h1><input id="isim1" placeholder="Birinci oyuncu" maxlength="18"><input id="isim2" placeholder="İkinci oyuncu" maxlength="18"><p>Her oyuncu 20 ₺ ile başlar.</p><p id="havuzBilgisi">Karakterler yükleniyor...</p><button class="altin" onclick="oyunuBaslat()">MEZATA GİR</button><button class="geri" onclick="ekranAc('anaEkran')">GERİ</button></div></section>
+<section id="mezatEkrani" class="ekran gizli">
+ <header class="ust-panel yeni-hud arena-hud" id="arenaHud">
+  <div class="hud-taraf hud-mavi arena-oyuncu arena-oyuncu-1">
+   <div class="oyuncu-kimlik"><div class="avatar">01</div><div class="oyuncu-detay"><h3 id="ad1">OYUNCU 1</h3><span id="sira1" class="sira-etiketi">SIRADA</span><div class="para-satiri"><strong id="para1">₺20</strong><div class="para-bar"><div id="paraBar1" class="para-dolum"></div></div></div></div></div>
+   <div id="takim1" class="takim"></div>
+  </div>
+  <div class="hud-logo arena-merkez">
+   <div class="arena-logo-satir"><span class="arena-sus" aria-hidden="true">✦</span><h1>ILAH SAVAŞLARI <span aria-hidden="true">⚒</span></h1><span class="arena-sus" aria-hidden="true">✦</span></div>
+   <div class="arena-sayac-satir"><span id="arenaTemaAdi">MEZAT MASASI</span><span class="arena-ayirac">•</span><span id="arenaKalanYazi">KALAN KARAKTER 10 / 10</span></div>
+   <div id="arenaTurCubuklari" class="arena-tur-cubuklari" aria-label="Dağıtılacak karakter sayısı"></div>
+   <small id="lotUst">LOT 01</small>
+  </div>
+  <div class="hud-taraf hud-kirmizi arena-oyuncu arena-oyuncu-2">
+   <div id="takim2" class="takim"></div>
+   <div class="oyuncu-kimlik"><div class="oyuncu-detay"><h3 id="ad2">OYUNCU 2</h3><span id="sira2" class="sira-etiketi">SIRADA</span><div class="para-satiri"><div class="para-bar"><div id="paraBar2" class="para-dolum"></div></div><strong id="para2">₺20</strong></div></div><div class="avatar">02</div></div>
+  </div>
+ </header>
+ <main class="satis-alani">
+  <article class="karakter-kart"><div class="kart-resim"><div class="kart-ust"><span id="kartKategori">KARAKTER</span><span id="kartNadirlik">NORMAL</span></div><div id="karakterResmi" class="karakter-resmi">⚔️</div><div class="kart-numara" id="kartLot">LOT 01</div></div><div class="kart-isim" id="kartIsim">KARAKTER</div></article>
+  <div id="karakterBilgi" class="karakter-bilgi"><div id="lakapSahne" class="lakap-sahne" aria-hidden="true"><div id="lakapArka" class="lakap-arka" data-text="MEZAT">MEZAT</div></div><div class="bilgi-etiket">KARAKTER DOSYASI</div><h2 id="karakterAdi">KARAKTER ADI</h2><p id="karakterHikaye" class="hikaye"></p><div class="iliski-baslik">🤝 DOSTLUK VE REKABET</div><div id="iliskiUyarilari" class="iliski-listesi"></div></div>
+  <aside class="istatistik-panel"><div class="istatistik-baslik">KARAKTER ÖZELLİKLERİ</div><div class="stat"><div><span>GÜÇ</span><strong id="guc">0</strong></div><div class="stat-arka"><div id="gucBar"></div></div></div><div class="stat"><div><span>SAVUNMA</span><strong id="savunma">0</strong></div><div class="stat-arka"><div id="savunmaBar"></div></div></div><div class="stat"><div><span>HIZ</span><strong id="hiz">0</strong></div><div class="stat-arka"><div id="hizBar"></div></div></div><div class="stat"><div><span>ZEKA</span><strong id="zeka">0</strong></div><div class="stat-arka"><div id="zekaBar"></div></div></div><div class="stat-not">Dostluk ve düşmanlık ilişkileri savaş sonucunu değiştirebilir.</div></aside>
+ </main>
+ <footer class="teklif-panel"><div class="teklif-ust"><span id="siraYazisi" class="sira-kutu">SIRA</span><span id="spiker">Yeni karakter açık artırmada!</span><span id="lotSayaci">LOT 01</span></div><div class="teklif-alt"><div class="fiyat"><small>MEVCUT TEKLİF</small><strong id="fiyatYazisi">₺0</strong><small id="teklifVeren">Henüz teklif yok</small></div><div id="teklifButonlari" class="butonlar"></div></div></footer>
+</section>
+<section id="sonucEkrani" class="giris ekran gizli"><div class="giris-kutu sonuc-kutu"><div class="kucuk-baslik">TAKIMLARIN SAVAŞI</div><h1 id="kazananYazisi">KAZANAN</h1><p id="savasOzeti"></p><div id="turSonuclari"></div><div id="sonucKartlari"></div><button class="altin" onclick="location.reload()">YENİ OYUN</button></div></section>
+<script src="database.js"></script><script src="script.js"></script><script src="panel-yeni.js"></script>
+<script src="ana-menu.js"></script>
+<script src="oyun-modlari.js"></script>
+<script src="bot.js"></script>
+</body></html>

@@ -1,0 +1,34 @@
+/* MEZAT savaş arayüzü: yalnızca üstte açılan bağımsız katman */
+#mezat-savas-overlay{position:fixed!important;inset:0!important;z-index:2147483000!important;overflow-y:auto!important;display:grid!important;place-items:center!important;padding:24px!important;background:radial-gradient(ellipse at 24% 30%,rgba(40,96,155,.24),transparent 54%),radial-gradient(ellipse at 82% 55%,rgba(187,53,65,.21),transparent 57%),#070d18!important;color:#f6e9d2!important;font-family:system-ui,Arial,sans-serif!important;box-sizing:border-box!important}
+#mezat-savas-overlay *{box-sizing:border-box}
+#mezat-savas-overlay .ms-shell{width:min(1120px,100%);padding:clamp(15px,3vw,32px);border:1px solid #a47a48;border-radius:18px;background:linear-gradient(130deg,#111e2deF,#121522f5);box-shadow:0 25px 100px #000b,0 0 45px #e9b86c12;position:relative;overflow:hidden}
+#mezat-savas-overlay .ms-shell:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.12;background-image:linear-gradient(90deg,#91b2d3 1px,transparent 1px),linear-gradient(#91b2d3 1px,transparent 1px);background-size:44px 44px}
+#mezat-savas-overlay .ms-top{position:relative;display:flex;justify-content:space-between;align-items:center;gap:16px;color:#c5b593;font-size:12px;font-weight:800;letter-spacing:2px}
+#mezat-savas-overlay .ms-stepdots{display:flex;gap:7px;justify-content:center}
+#mezat-savas-overlay .ms-stepdots i{display:block;width:26px;height:5px;border-radius:10px;background:#3f4854;transition:background .3s}
+#mezat-savas-overlay .ms-stepdots i.on{background:#e3b96c;box-shadow:0 0 12px #e3b96c90}
+#mezat-savas-overlay .ms-title{text-align:center;margin:24px auto 7px;font-size:clamp(35px,6vw,76px);line-height:1.06;letter-spacing:1px;font-weight:1000;color:#fff2da;text-shadow:3px 5px #060b13,0 0 28px #c08a4370}
+#mezat-savas-overlay .ms-sub{text-align:center;color:#a9b5c2;line-height:1.5;min-height:24px;margin:0 auto 20px;font-size:14px}
+#mezat-savas-overlay .ms-duel{display:grid;grid-template-columns:minmax(0,1fr) 90px minmax(0,1fr);gap:15px;align-items:start;position:relative}
+#mezat-savas-overlay .ms-team{border:1px solid #4c7ca7;background:linear-gradient(160deg,#152e46,#101b2a);border-radius:12px;padding:15px;min-width:0}
+#mezat-savas-overlay .ms-team.red{border-color:#a95854;background:linear-gradient(160deg,#44252e,#271821)}
+#mezat-savas-overlay .ms-team-name{font-size:clamp(15px,2vw,25px);font-weight:900;overflow-wrap:anywhere}
+#mezat-savas-overlay .ms-team-tag{font-size:11px;color:#9acafa;letter-spacing:1px;font-weight:800;margin:5px 0 14px}
+#mezat-savas-overlay .ms-team.red .ms-team-tag{color:#ffc0ad}
+#mezat-savas-overlay .ms-portraits{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+#mezat-savas-overlay .ms-face{position:relative;border:2px solid #5190c4;background:#101d2a;border-radius:6px;aspect-ratio:3/4;overflow:hidden;min-width:0;display:grid;place-items:center;font-weight:bold;color:#e5c786;font-size:28px}
+#mezat-savas-overlay .red .ms-face{border-color:#bd625b}
+#mezat-savas-overlay .ms-face img{width:100%;height:100%;object-fit:cover;display:block}
+#mezat-savas-overlay .ms-face span{position:absolute;bottom:0;left:0;right:0;background:#050c12d9;color:#fff;font-size:clamp(8px,1vw,11px);padding:4px 2px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#mezat-savas-overlay .ms-middle{text-align:center;font-size:clamp(35px,5vw,65px);font-weight:1000;color:#efc078;align-self:center;text-shadow:0 0 28px #eb9f4766}
+#mezat-savas-overlay .ms-score{display:flex;align-items:center;justify-content:center;gap:20px;font-size:clamp(22px,3vw,40px);font-weight:1000;margin-top:12px}
+#mezat-savas-overlay .ms-score .blue{color:#81c6ff}#mezat-savas-overlay .ms-score .red{color:#ff988e}
+#mezat-savas-overlay .ms-story{position:relative;border:1px solid #5a4d3a;background:#0c1623;padding:15px;border-radius:9px;margin:20px 0 0;min-height:78px;color:#e9d5b0;font-size:15px;line-height:1.6;text-align:center}
+#mezat-savas-overlay .ms-foot{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px}
+#mezat-savas-overlay button{cursor:pointer;background:linear-gradient(#f5dca6,#c69b53);color:#14191e;font-weight:900;font-size:15px;padding:13px 24px;border:1px solid #f0d29b;border-radius:8px;box-shadow:0 4px #583b1e;min-width:190px}
+#mezat-savas-overlay button:hover{filter:brightness(1.12)}
+#mezat-savas-overlay .ms-bonus{font-size:12px;color:#a7c7b8;margin-top:8px;text-align:center}
+#mezat-savas-overlay .ms-flash{animation:ms-flash .7s ease}
+@keyframes ms-flash{from{filter:brightness(1.8);transform:scale(1.02)}to{filter:brightness(1);transform:scale(1)}}
+@media(max-width:720px){#mezat-savas-overlay{padding:8px!important}#mezat-savas-overlay .ms-duel{grid-template-columns:1fr;gap:9px}#mezat-savas-overlay .ms-middle{font-size:25px;line-height:1}#mezat-savas-overlay .ms-team{padding:9px}#mezat-savas-overlay .ms-title{margin-top:15px}#mezat-savas-overlay .ms-face span{font-size:8px}}
+@media(prefers-reduced-motion:reduce){#mezat-savas-overlay *,#mezat-savas-overlay *:before{animation:none!important;transition:none!important}}

@@ -1,0 +1,911 @@
+/* MEZAT: üst HUD ve karakter tanıtım temaları */
+#mezatEkrani .yeni-hud{--slot:clamp(37px,4vw,70px);display:grid;grid-template-columns:minmax(0,1fr) 180px minmax(0,1fr);align-items:stretch;gap:0;width:100%;min-height:108px;padding:5px 8px!important;margin:0;background:#08111e;border-bottom:4px solid #030711;position:relative;z-index:20}
+.yeni-hud .hud-taraf{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;min-height:100px;padding:8px;border:3px solid #07101b;background:radial-gradient(rgba(32,49,65,.08) 1px,transparent 1px) 0 0/7px 7px,linear-gradient(90deg,#e6e9ec,#f8efdb)}
+.yeni-hud .hud-mavi{border-left:8px solid #2467ef}.yeni-hud .hud-kirmizi{border-right:8px solid #dc333c;background:radial-gradient(rgba(32,49,65,.07) 1px,transparent 1px) 0 0/7px 7px,linear-gradient(270deg,#f6d9d8,#f8efdb)}
+.yeni-hud .oyuncu-kimlik{display:flex;align-items:center;gap:8px;flex:0 0 auto;min-width:0}.yeni-hud .avatar{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;padding:0;border-radius:50%;background:#1956c4;border:3px solid #091422;color:white;font-size:17px;font-weight:900;font-style:italic}.yeni-hud .hud-kirmizi .avatar{background:#cd343e}
+.yeni-hud .oyuncu-detay{display:flex;flex-direction:column;gap:4px;min-width:0}.yeni-hud .oyuncu-detay h3{margin:0!important;color:#101820!important;font-size:clamp(12px,1.1vw,18px)!important;font-weight:900;letter-spacing:1px;max-width:170px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.yeni-hud .hud-kirmizi .oyuncu-detay{align-items:flex-end}
+.yeni-hud .sira-etiketi{display:inline-block;padding:2px 6px;border:1px solid #2778bd;border-radius:3px;background:#deefff;color:#1054a5;font-size:9px;font-weight:900}.yeni-hud .sira-etiketi.kapali{opacity:0}
+.yeni-hud .para-satiri{display:flex;align-items:center;gap:6px}.yeni-hud .para-satiri strong{color:#0b1420!important;font-size:clamp(19px,1.8vw,28px)!important;font-weight:900;font-style:italic;line-height:1;white-space:nowrap}
+.yeni-hud .para-bar{width:clamp(45px,5vw,95px);height:11px;overflow:hidden;flex-shrink:0;border-radius:20px;background:#b7c3d0;box-shadow:inset 0 1px 3px rgba(0,0,0,.25)}.yeni-hud .para-dolum{height:100%;width:100%;background:linear-gradient(90deg,#1256dc,#378bff);border-radius:inherit;transition:width .65s ease}.yeni-hud .hud-kirmizi .para-dolum{background:linear-gradient(90deg,#ff525c,#cb222c)}
+.yeni-hud .takim{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:4px!important;min-width:0;flex:1 1 auto;padding:0!important;margin:0!important}.yeni-hud .yuva{display:grid!important;place-items:center;position:relative;flex:0 0 var(--slot);width:var(--slot)!important;height:calc(var(--slot)*1.13)!important;min-width:0;padding:0!important;overflow:hidden;border:3px solid #070c15!important;border-radius:2px!important;background:radial-gradient(#253044 1px,transparent 1px) 0 0/8px 8px,#101421;color:#9298ae;font-size:13px;font-weight:700;box-shadow:2px 3px 0 rgba(0,0,0,.4)}.yeni-hud .yuva.ilk-bos{border-color:#267dff!important;box-shadow:0 0 12px rgba(39,115,255,.8)}.yeni-hud .hud-kirmizi .yuva.ilk-bos{border-color:#ff535b!important;box-shadow:0 0 12px rgba(233,56,65,.7)}.yeni-hud .yuva.dolu{border-color:#94784a!important}.yeni-hud .yuva img{display:block;width:100%!important;height:100%!important;object-fit:cover}.yeni-hud .yuva .yuva-harf{display:grid;place-items:center;width:100%;height:100%;color:#f2d39c;font-size:24px}.yeni-hud .yuva.dolu.nadirlik-normal{border-color:#9c9ea6!important}.yeni-hud .yuva.dolu.nadirlik-nadir{border-color:#48aaff!important;box-shadow:0 0 12px rgba(60,160,255,.45)}.yeni-hud .yuva.dolu.nadirlik-epik{border-color:#b77aff!important;box-shadow:0 0 12px rgba(170,97,255,.45)}.yeni-hud .yuva.dolu.nadirlik-efsane{border-color:#f2c05c!important;box-shadow:0 0 15px rgba(242,192,92,.5)}.yeni-hud .yuva.varis-efekti{animation:envanterVaris .65s ease}@keyframes envanterVaris{0%{transform:scale(.8);filter:brightness(1)}45%{transform:scale(1.15);filter:brightness(1.8)}100%{transform:scale(1);filter:brightness(1)}}
+.yeni-hud .hud-logo{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;margin:-2px -4px;border:3px solid #9b722c;border-radius:7px;background:radial-gradient(ellipse at top,#293c51,#0a101b 75%);box-shadow:0 0 0 3px #050b13;text-align:center}.yeni-hud .hud-logo .logo-cekic{color:#f3bc5b;font-size:23px;line-height:1}.yeni-hud .hud-logo h1{margin:0!important;color:#ffd283!important;font-size:clamp(28px,2.7vw,42px)!important;font-weight:900;letter-spacing:-1px;line-height:1;text-shadow:0 2px 0 #88501a,0 4px 0 #3e220a,2px 5px 4px #000}.yeni-hud .hud-logo span{margin-top:5px;color:#f6e5be;font-size:9px;font-weight:800;letter-spacing:.5px}.yeni-hud .hud-logo small{margin-top:4px;color:#e9bd6b;font-size:10px}
+/* Nadirlik çerçeveleri */
+#mezatEkrani .karakter-kart{position:relative;overflow:hidden;border:3px solid #9b8b74;transition:border-color .25s,box-shadow .25s}#mezatEkrani .karakter-kart::before{content:'';position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.16) 50%,transparent 75%);transform:translateX(-120%)}#mezatEkrani .karakter-kart.nadirlik-normal{border-color:#a9a9a9;box-shadow:0 0 17px rgba(190,190,190,.2)}#mezatEkrani .karakter-kart.nadirlik-nadir{border-color:#42b6ff;box-shadow:0 0 25px rgba(66,182,255,.4)}#mezatEkrani .karakter-kart.nadirlik-epik{border-color:#ad6eff;box-shadow:0 0 27px rgba(173,110,255,.45)}#mezatEkrani .karakter-kart.nadirlik-efsane{border-color:#f3c463;box-shadow:0 0 32px rgba(243,196,99,.5)}#mezatEkrani .karakter-kart:is(.nadirlik-nadir,.nadirlik-epik,.nadirlik-efsane)::before{animation:kartIsik 4s linear infinite}@keyframes kartIsik{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}#mezatEkrani .karakter-kart.satildi-efekt{animation:kartSatildi .8s ease}@keyframes kartSatildi{50%{filter:brightness(1.55)}}
+.flying-kart{position:fixed;z-index:99999;pointer-events:none;overflow:hidden;border:3px solid #e6ba64;border-radius:7px;background:#101722;box-shadow:0 0 25px rgba(238,187,88,.5),0 14px 28px rgba(0,0,0,.45);transition:left .78s cubic-bezier(.2,.8,.2,1),top .78s cubic-bezier(.2,.8,.2,1),width .78s cubic-bezier(.2,.8,.2,1),height .78s cubic-bezier(.2,.8,.2,1),opacity .78s ease,transform .78s ease}.flying-kart img{width:100%;height:100%;object-fit:cover}.flying-kart .fallback{display:grid;place-items:center;width:100%;height:100%;font-size:40px;color:#e7c17e}.flying-kart.nadirlik-nadir{border-color:#48aaff}.flying-kart.nadirlik-epik{border-color:#b77aff}.flying-kart.nadirlik-efsane{border-color:#f2c05c}
+/* KARAKTER DOSYASI: görkemli isim ve arkada dalgalanan lakap */
+#mezatEkrani .karakter-bilgi{--aura:#d76adc;--aura-soluk:rgba(205,75,184,.14);position:relative;isolation:isolate;overflow:hidden;min-height:390px;padding:clamp(20px,2.5vw,40px)!important;background:radial-gradient(ellipse at 32% 48%,var(--aura-soluk),transparent 75%),linear-gradient(115deg,rgba(11,17,33,.4),rgba(8,15,28,.06))!important}
+#mezatEkrani .karakter-bilgi.tema-neon-mor{--aura:#d56eea;--aura-soluk:rgba(179,60,194,.23)}#mezatEkrani .karakter-bilgi.tema-kirmizi{--aura:#ff6879;--aura-soluk:rgba(245,63,87,.20)}#mezatEkrani .karakter-bilgi.tema-mavi{--aura:#75bcff;--aura-soluk:rgba(80,158,255,.21)}#mezatEkrani .karakter-bilgi.tema-altin{--aura:#f3c66f;--aura-soluk:rgba(242,178,74,.18)}#mezatEkrani .karakter-bilgi.tema-yesil{--aura:#72e1b7;--aura-soluk:rgba(70,210,158,.19)}
+#mezatEkrani .lakap-sahne{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}#mezatEkrani .lakap-arka{position:absolute;left:-1%;top:3%;display:block;max-width:none;width:max-content;white-space:nowrap;line-height:.95;font-family:Impact,'Arial Black',sans-serif;font-weight:900;letter-spacing:-.055em;text-transform:uppercase;color:transparent;-webkit-text-stroke:2px var(--aura);opacity:.2;filter:drop-shadow(0 0 12px var(--aura));user-select:none}
+/* Işık taraması sadece harflerin içinde görünür; yazı yerinden oynamaz. */
+#mezatEkrani .lakap-arka::after{content:attr(data-text);position:absolute;inset:0;white-space:nowrap;color:transparent;-webkit-text-stroke:0 transparent;background:linear-gradient(100deg,transparent 0%,transparent 38%,var(--aura) 47%,#fff 50%,var(--aura) 53%,transparent 62%,transparent 100%);background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;opacity:0;filter:drop-shadow(0 0 12px var(--aura));animation:lakapDalga 5.5s linear infinite}
+@keyframes lakapDalga{0%,10%{background-position:100% 0;opacity:0}20%{opacity:.7}45%{background-position:0% 0;opacity:1}58%{background-position:-55% 0;opacity:.6}68%,100%{background-position:-100% 0;opacity:0}}
+#mezatEkrani .bilgi-icerik{position:relative;z-index:2}#mezatEkrani #karakterAdi{font-family:Impact,'Arial Black',system-ui,sans-serif!important;font-size:clamp(39px,4.5vw,82px)!important;font-weight:900!important;line-height:1.05!important;letter-spacing:-.025em!important;color:#fff0d8!important;text-transform:uppercase;text-shadow:2px 3px 0 #09070e,4px 5px 0 #030407,0 0 20px var(--aura-soluk);overflow-wrap:anywhere;margin:25px 0 8px!important}#mezatEkrani .baslik-cizgi{height:3px;width:min(390px,85%);margin:9px 0 20px;background:linear-gradient(90deg,var(--aura),#e7c58a,transparent);box-shadow:0 0 14px var(--aura)}#mezatEkrani #karakterHikaye{line-height:1.7;max-width:850px;position:relative;z-index:2;text-shadow:0 1px 3px #000}#mezatEkrani .iliski-baslik,#mezatEkrani .iliski-listesi{position:relative;z-index:2}
+@media(max-width:1450px){#mezatEkrani .yeni-hud{--slot:clamp(33px,3.4vw,48px);grid-template-columns:minmax(0,1fr) 145px minmax(0,1fr)}.yeni-hud .avatar{flex-basis:37px;width:37px;height:37px}.yeni-hud .para-bar{width:47px}.yeni-hud .hud-taraf{padding:7px 5px;gap:4px}.yeni-hud .oyuncu-kimlik{gap:5px}}
+@media(max-width:1020px){#mezatEkrani .yeni-hud{grid-template-columns:1fr 1fr;gap:6px}.yeni-hud .hud-logo{grid-column:1/-1;grid-row:1;min-height:60px;margin:0}.yeni-hud .hud-mavi{grid-column:1;grid-row:2}.yeni-hud .hud-kirmizi{grid-column:2;grid-row:2}.yeni-hud .hud-taraf{flex-direction:column;align-items:stretch}.yeni-hud .oyuncu-kimlik,.yeni-hud .takim{justify-content:center!important}}
+@media(max-width:580px){#mezatEkrani .yeni-hud{--slot:clamp(25px,7.5vw,37px)}.yeni-hud .avatar{display:none}.yeni-hud .oyuncu-detay h3{font-size:12px!important}.yeni-hud .para-satiri strong{font-size:20px!important}.yeni-hud .para-bar{width:40px}.yeni-hud .yuva{border-width:2px!important;font-size:10px}#mezatEkrani .karakter-bilgi{min-height:310px}#mezatEkrani #karakterAdi{font-size:42px!important}}
+@media(prefers-reduced-motion:reduce){#mezatEkrani .lakap-arka::after,#mezatEkrani .karakter-kart::before{animation:none!important}.flying-kart,.yeni-hud .para-dolum{transition-duration:.01ms!important}}
+
+
+/* LAKAP YAZISININ KIRPILMASINI ENGELLE */
+
+#mezatEkrani .satis-alani,
+#mezatEkrani .karakter-bilgi,
+#mezatEkrani .lakap-sahne {
+    overflow: visible !important;
+}
+
+#mezatEkrani .lakap-sahne {
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+}
+
+#mezatEkrani .lakap-arka {
+    overflow: visible !important;
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+}
+
+/* =========================================
+   MEZAT - HAREKETLİ ARENA ARKA PLANI
+   ========================================= */
+
+/* Ana mezat ekranı */
+#mezatEkrani {
+    position: relative;
+    isolation: isolate;
+    background:
+        radial-gradient(
+            ellipse at 40% 35%,
+            rgba(68, 48, 114, 0.22),
+            transparent 58%
+        ),
+        radial-gradient(
+            ellipse at 85% 65%,
+            rgba(17, 104, 142, 0.16),
+            transparent 55%
+        ),
+        linear-gradient(
+            145deg,
+            #07121e,
+            #101827 55%,
+            #060d17
+        ) !important;
+}
+
+/* Hareketli ışık ve grid katmanı */
+#mezatEkrani::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background-image:
+        linear-gradient(
+            rgba(113, 154, 185, 0.055) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(113, 154, 185, 0.055) 1px,
+            transparent 1px
+        ),
+        radial-gradient(
+            ellipse at 15% 40%,
+            rgba(70, 120, 255, 0.12),
+            transparent 55%
+        );
+
+    background-size:
+        44px 44px,
+        44px 44px,
+        100% 100%;
+
+    opacity: 0.7;
+
+    animation: mezatGridHareketi 30s linear infinite;
+}
+
+/* Ekranda yavaş hareket eden ışık */
+#mezatEkrani::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            110deg,
+            transparent 15%,
+            rgba(95, 167, 241, 0.045) 35%,
+            rgba(210, 176, 255, 0.09) 49%,
+            rgba(95, 167, 241, 0.045) 63%,
+            transparent 85%
+        );
+
+    background-size: 220% 100%;
+    background-position: 100% 0;
+
+    animation: mezatIsikHareketi 14s ease-in-out infinite;
+}
+
+/* Grid çok yavaş kayar */
+@keyframes mezatGridHareketi {
+    from {
+        background-position:
+            0 0,
+            0 0,
+            center;
+    }
+
+    to {
+        background-position:
+            44px 44px,
+            44px 44px,
+            center;
+    }
+}
+
+/* Işık soldan sağa geçer */
+@keyframes mezatIsikHareketi {
+    0%, 12% {
+        background-position: 100% 0;
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    65% {
+        background-position: -100% 0;
+        opacity: 1;
+    }
+
+    82%, 100% {
+        background-position: -100% 0;
+        opacity: 0;
+    }
+}
+
+/* Kenarlarda hafif atmosferik karartma */
+#mezatEkrani .satis-alani {
+    position: relative;
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 35%,
+            rgba(0, 5, 13, 0.23) 100%
+        ) !important;
+}
+
+/* Mevcut lakap animasyonu görünür kalır */
+#mezatEkrani .karakter-bilgi,
+#mezatEkrani .lakap-sahne {
+    overflow: visible !important;
+}
+
+/* Hareket azaltma ayarı */
+@media (prefers-reduced-motion: reduce) {
+    #mezatEkrani::before,
+    #mezatEkrani::after {
+        animation: none !important;
+    }
+}
+
+/* =====================================================
+   MEZAT - DEKORATİF ARKA PLAN OBJELERİ
+   nargile / viski / sigara / binalar + parlama dalgası
+   ===================================================== */
+
+#mezatEkrani .satis-alani {
+    position: relative;
+    overflow: visible !important;
+    isolation: isolate;
+}
+
+/* ANA DEKOR KATMANI */
+#mezatEkrani .satis-alani::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.28;
+
+    background-repeat: no-repeat;
+
+    /* solda nargile, ortada viski, sağda sigara paketi, arkada bina çizgileri */
+    background-image:
+        url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 260'>\
+<g fill='none' stroke='rgba(212,120,255,0.42)' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'>\
+<path d='M110 18 C128 18 142 34 142 52 C142 66 135 78 124 84 L124 102'/>\
+<path d='M124 102 C124 110 118 116 110 116 C102 116 96 110 96 102 L96 84 C85 78 78 66 78 52 C78 34 92 18 110 18 Z'/>\
+<path d='M96 116 L124 116'/>\
+<path d='M110 116 L110 160'/>\
+<path d='M82 160 L138 160'/>\
+<path d='M88 160 L84 208 C83 222 94 234 110 234 C126 234 137 222 136 208 L132 160'/>\
+<path d='M62 140 C82 136 92 132 106 126'/>\
+<path d='M62 140 C46 142 34 152 30 164'/>\
+<path d='M109 234 L109 250'/>\
+<path d='M82 250 L136 250'/>\
+</g></svg>"),
+
+        url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 260'>\
+<g fill='none' stroke='rgba(255,170,120,0.38)' stroke-width='2.2' stroke-linejoin='round'>\
+<path d='M64 26 L116 26 L124 54 L124 218 L56 218 L56 54 Z'/>\
+<path d='M76 26 L76 12 L104 12 L104 26'/>\
+<path d='M70 82 C84 96 96 96 110 82'/>\
+<path d='M72 138 C88 150 96 150 108 138'/>\
+<path d='M56 178 L124 178'/>\
+</g></svg>"),
+
+        url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 180'>\
+<g fill='none' stroke='rgba(255,210,140,0.36)' stroke-width='2.2' stroke-linejoin='round'>\
+<rect x='28' y='28' width='118' height='88' rx='4'/>\
+<path d='M146 42 L178 42 L192 58 L192 128 L74 128'/>\
+<path d='M44 48 L110 48'/>\
+<path d='M44 66 L122 66'/>\
+<path d='M44 84 L96 84'/>\
+<path d='M58 128 L58 150'/>\
+<path d='M82 128 L82 150'/>\
+<path d='M106 128 L106 150'/>\
+</g></svg>"),
+
+        url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 360'>\
+<g fill='none' stroke='rgba(120,180,255,0.18)' stroke-width='2'>\
+<path d='M20 280 L20 210 L80 210 L80 160 L140 160 L140 230 L190 230 L190 120 L270 120 L270 280 Z'/>\
+<path d='M330 280 L330 180 L420 180 L420 90 L520 90 L520 140 L560 140 L560 280 Z'/>\
+<path d='M610 280 L610 190 L670 190 L670 130 L740 130 L740 220 L790 220 L790 100 L860 100 L860 280 Z'/>\
+<path d='M0 280 L900 280'/>\
+</g></svg>");
+
+    background-size:
+        180px auto,
+        120px auto,
+        180px auto,
+        100% auto;
+
+    background-position:
+        3% 60%,
+        62% 56%,
+        82% 65%,
+        50% 78%;
+}
+
+/* PARLAMA / DALGA KATMANI */
+#mezatEkrani .satis-alani::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.95;
+
+    background-repeat: no-repeat;
+    background-image:
+        linear-gradient(
+            100deg,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,0) 35%,
+            rgba(255,160,240,0.10) 43%,
+            rgba(255,220,245,0.55) 49%,
+            rgba(255,120,215,0.16) 56%,
+            rgba(255,255,255,0) 64%,
+            rgba(255,255,255,0) 100%
+        );
+    background-size: 240% 100%;
+    background-position: 120% 0;
+
+    mix-blend-mode: screen;
+    animation: mezatDekorDalga 8.5s ease-in-out infinite;
+}
+
+@keyframes mezatDekorDalga {
+    0%, 10% {
+        background-position: 120% 0;
+        opacity: 0;
+    }
+    22% {
+        opacity: 0.9;
+    }
+    52% {
+        background-position: 40% 0;
+        opacity: 1;
+    }
+    74% {
+        background-position: -30% 0;
+        opacity: 0.95;
+    }
+    100% {
+        background-position: -60% 0;
+        opacity: 0;
+    }
+}
+
+/* Bilgi alanları dekorun üstünde kalsın */
+#mezatEkrani .karakter-kart,
+#mezatEkrani .karakter-bilgi,
+#mezatEkrani .istatistik-panel,
+#mezatEkrani .teklif-panel {
+    position: relative;
+    z-index: 2;
+}
+
+/* Mobilde biraz sadeleşsin */
+@media (max-width: 1100px) {
+    #mezatEkrani .satis-alani::before {
+        opacity: 0.18;
+        background-size:
+            120px auto,
+            90px auto,
+            120px auto,
+            100% auto;
+    }
+}
+
+/* Hareket azaltma ayarı */
+@media (prefers-reduced-motion: reduce) {
+    #mezatEkrani .satis-alani::after {
+        animation: none !important;
+        opacity: 0.35;
+    }
+}
+/* =========================================
+   MEZAT - EKRANA SIĞAN OYUN DÜZENİ
+   ========================================= */
+
+/* Oyun ekranı tarayıcı yüksekliğini kullansın */
+#mezatEkrani {
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+/* Üst envanter küçülmesin */
+#mezatEkrani .yeni-hud {
+    flex: 0 0 auto !important;
+}
+
+/* Orta alan kalan boşluğu kullansın */
+#mezatEkrani .satis-alani {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-x: visible !important;
+    overflow-y: auto !important;
+    align-content: center;
+}
+
+/* Teklif paneli ekranın dibinde sabit kalsın */
+#mezatEkrani .teklif-panel {
+    position: relative !important;
+    flex: 0 0 auto !important;
+
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    z-index: 30;
+}
+
+/* Gereksiz dikey boşlukları azalt */
+#mezatEkrani .satis-alani {
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+}
+
+/* Teklif alanını kompakt yap */
+#mezatEkrani .teklif-panel {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+#mezatEkrani .teklif-ust {
+    margin-bottom: 6px !important;
+}
+
+/* Daha kısa ekranlarda kartın kapladığı alanı azalt */
+@media (max-height: 850px) {
+    #mezatEkrani .satis-alani {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+
+    #mezatEkrani .karakter-kart {
+        max-height: 390px;
+    }
+}
+
+/* Küçük ekranlarda orta bölüm kaydırılabilir,
+   ama teklif paneli görünür kalır */
+@media (max-height: 650px) {
+    #mezatEkrani .satis-alani {
+        align-content: start;
+    }
+}
+
+/* KARAKTER HİKÂYESİNİ KALINLAŞTIR */
+
+#mezatEkrani #karakterHikaye {
+    font-weight: 600 !important;
+    color: #d5d5df !important;
+    line-height: 1.7 !important;
+}
+
+/* SAVAŞ SONUÇ EKRANINI DÜZELT */
+
+#sonucEkrani:not(.gizli) {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 99999 !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+
+    margin: 0 !important;
+    padding: 20px !important;
+
+    overflow-y: auto !important;
+
+    background: #07121c !important;
+}
+
+#sonucEkrani:not(.gizli) .giris-kutu {
+    position: relative !important;
+    width: min(900px, 100%) !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    margin: auto !important;
+}
+
+/* Gizli ekranlar kesinlikle görünmesin */
+#sonucEkrani.gizli {
+    display: none !important;
+}
+
+/* OYUNCU ADI VE SIRA YAZISINI BÜYÜT */
+
+/* Oyuncu adı */
+#mezatEkrani .yeni-hud .oyuncu-detay h3 {
+    font-size: 19px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.8px !important;
+    max-width: 210px !important;
+    line-height: 1.2 !important;
+}
+
+/* SIRADA etiketi */
+#mezatEkrani .yeni-hud .sira-etiketi {
+    font-size: 20px !important;
+    font-weight: 900 !important;
+    padding: 4px 8px !important;
+    letter-spacing: 1px !important;
+}
+
+/* İsim ile para arasındaki boşluk */
+#mezatEkrani .yeni-hud .oyuncu-detay {
+    gap: 5px !important;
+}
+
+/* KARAKTER İSMİ VE İLİŞKİ ALANI DÜZENLEMESİ */
+
+/* Orta alandaki içerikleri yukarıdan başlat */
+#mezatEkrani .satis-alani {
+    align-items: start !important;
+    align-content: start !important;
+}
+
+/* Karakter bilgisi yukarıdan başlasın */
+#mezatEkrani .karakter-bilgi {
+    align-self: start !important;
+    min-height: 0 !important;
+}
+
+/* Dostluk ve rekabet listesine yükseklik sınırı */
+#mezatEkrani #iliskiUyarilari {
+    max-height: 220px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: #ad8251 #101923;
+}
+
+/* Uzun hikâyelerde yazı doğal şekilde aksın */
+#mezatEkrani #karakterHikaye {
+    margin-top: 18px !important;
+}
+
+/* =========================================
+   MEZAT - TEKLIF PANELI GELISTIRME
+   Büyük fiyat + canlı spiker + all in + satıldı
+   ========================================= */
+
+#mezatEkrani .teklif-panel {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(23, 14, 11, 0.95), rgba(9, 10, 14, 0.97)) !important;
+    border: 1px solid rgba(214, 145, 74, 0.55) !important;
+    box-shadow:
+        0 0 0 1px rgba(255, 195, 120, 0.08) inset,
+        0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* üst bilgi şeridi */
+#mezatEkrani .teklif-ust {
+    position: relative;
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    align-items: center !important;
+    gap: 14px !important;
+    border-bottom: 1px solid rgba(214, 145, 74, 0.22);
+    padding-bottom: 12px !important;
+    margin-bottom: 14px !important;
+}
+
+/* SIRA kutusu */
+#mezatEkrani #siraYazisi {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 14px !important;
+    border: 1px solid rgba(235, 126, 95, 0.7) !important;
+    background: linear-gradient(180deg, rgba(119, 43, 28, 0.35), rgba(65, 24, 15, 0.18)) !important;
+    color: #ffe7c6 !important;
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    letter-spacing: 1px !important;
+}
+
+/* canlı spiker metni */
+#mezatEkrani #spiker {
+    display: block;
+    font-size: clamp(18px, 1.45vw, 25px) !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    color: #f4eee3 !important;
+    text-align: center;
+    text-shadow: 0 0 14px rgba(255, 235, 190, 0.08);
+}
+
+/* spiker mesajı değişince parlasın */
+#mezatEkrani .teklif-ust.spiker-parla {
+    animation: spikerParla 0.65s ease;
+}
+
+@keyframes spikerParla {
+    0% {
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+        transform: scale(1);
+    }
+    30% {
+        box-shadow: 0 0 18px rgba(255, 191, 94, 0.18);
+        transform: scale(1.01);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+        transform: scale(1);
+    }
+}
+
+/* lot bilgisi */
+#mezatEkrani .teklif-ust .lot-sayaci,
+#mezatEkrani #lotSayaci {
+    font-size: 19px !important;
+    font-weight: 800 !important;
+    color: #e1bd7a !important;
+    white-space: nowrap;
+}
+
+/* büyük teklif fiyatı */
+#mezatEkrani #fiyatYazisi {
+    display: inline-block;
+    font-size: clamp(42px, 4vw, 72px) !important;
+    line-height: 1 !important;
+    font-weight: 1000 !important;
+    color: #ffe3a4 !important;
+    letter-spacing: -1px;
+    text-shadow:
+        0 0 14px rgba(255, 194, 94, 0.20),
+        0 4px 0 rgba(0, 0, 0, 0.45);
+    transform-origin: center;
+}
+
+#mezatEkrani #fiyatYazisi.teklif-pop {
+    animation: teklifPop 0.28s ease;
+}
+
+@keyframes teklifPop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.18); }
+    100% { transform: scale(1); }
+}
+
+/* mevcut teklif alt metni */
+#mezatEkrani #teklifVeren,
+#mezatEkrani .teklif-panel .ince-yazi {
+    color: #c9c4bc !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
+
+/* butonlar daha güçlü görünsün */
+#mezatEkrani #teklifButonlari {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#mezatEkrani #teklifButonlari button {
+    min-width: 92px;
+    min-height: 60px;
+    padding: 10px 16px !important;
+    border-radius: 8px !important;
+    font-size: 17px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.4px;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        filter 0.15s ease !important;
+}
+
+#mezatEkrani #teklifButonlari button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.24);
+    filter: brightness(1.05);
+}
+
+/* HEPSİ butonu */
+#mezatEkrani #teklifButonlari .altin {
+    background: linear-gradient(180deg, #f2dd9f, #d7b357) !important;
+    color: #20170a !important;
+    border: 1px solid rgba(255, 233, 168, 0.55) !important;
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,0.12) inset,
+        0 0 18px rgba(245, 202, 88, 0.14);
+}
+
+/* bırak butonu */
+#mezatEkrani #teklifButonlari .pas {
+    border: 1px solid rgba(255, 102, 102, 0.45) !important;
+    color: #f4e6e1 !important;
+}
+
+/* ALL IN panel patlaması */
+#mezatEkrani .teklif-panel.all-in-efekt {
+    animation: allInPanelPatlama 0.9s ease;
+}
+
+@keyframes allInPanelPatlama {
+    0% {
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+    18% {
+        box-shadow:
+            0 0 35px rgba(255, 203, 75, 0.35),
+            0 0 70px rgba(79, 172, 255, 0.18);
+    }
+    100% {
+        box-shadow:
+            0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+}
+
+/* ALL IN yazısı */
+#mezatEkrani .allin-badge {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    z-index: 50;
+    pointer-events: none;
+    padding: 16px 26px;
+    border-radius: 14px;
+    background:
+        linear-gradient(180deg, rgba(255, 221, 130, 0.96), rgba(235, 170, 57, 0.96));
+    color: #221506;
+    font-size: 34px;
+    font-weight: 1000;
+    letter-spacing: 1px;
+    box-shadow:
+        0 0 34px rgba(255, 203, 77, 0.38),
+        0 10px 30px rgba(0, 0, 0, 0.26);
+    animation: allInRozeti 0.95s ease forwards;
+}
+
+@keyframes allInRozeti {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.55);
+    }
+    25% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.08);
+    }
+    70% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.92);
+    }
+}
+
+/* SATILDI damgası */
+#mezatEkrani .karakter-kart {
+    position: relative;
+    overflow: visible !important;
+}
+
+#mezatEkrani .karakter-kart.satildi-efekt::after {
+    content: "SATILDI!";
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    transform: translate(-50%, -50%) rotate(-12deg) scale(0.55);
+    z-index: 25;
+    pointer-events: none;
+
+    padding: 12px 24px;
+    border: 5px solid rgba(247, 77, 77, 0.95);
+    border-radius: 10px;
+    background: rgba(45, 7, 7, 0.82);
+    color: #ffd7d7;
+
+    font-size: clamp(30px, 2.4vw, 46px);
+    font-weight: 1000;
+    letter-spacing: 2px;
+    box-shadow:
+        0 0 0 2px rgba(255,255,255,0.07) inset,
+        0 0 28px rgba(255, 80, 80, 0.18);
+
+    animation: satildiDamga 0.75s ease forwards;
+}
+
+@keyframes satildiDamga {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -80%) rotate(-18deg) scale(1.35);
+    }
+    55% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(-10deg) scale(0.92);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(-10deg) scale(1);
+    }
+}
+
+@media (max-width: 1100px) {
+    #mezatEkrani .teklif-ust {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    #mezatEkrani #teklifButonlari {
+        justify-content: center;
+    }
+
+    #mezatEkrani #teklifButonlari button {
+        min-width: 84px;
+        min-height: 54px;
+    }
+}
+/* TEKLIF BUTONLARINI BUYUT VE YAY */
+
+#mezatEkrani #teklifButonlari {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(110px, 1fr)) !important;
+    gap: 14px !important;
+    width: min(720px, 100%) !important;
+    margin-left: auto !important;
+    align-items: stretch !important;
+}
+
+#mezatEkrani #teklifButonlari button {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 74px !important;
+    font-size: 19px !important;
+    font-weight: 900 !important;
+    border-radius: 10px !important;
+    padding: 10px 12px !important;
+}
+
+#mezatEkrani #teklifButonlari .altin {
+    font-size: 20px !important;
+}
+
+#mezatEkrani #teklifButonlari .pas {
+    font-size: 18px !important;
+}
+
+/* ==========================================
+   MEZAT - TAKIM SEÇİMİ BUTONLARI
+   ========================================== */
+
+/* İki butonlu seçim ekranı */
+#mezatEkrani #teklifButonlari:has(> button:nth-child(2):last-child) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    width: min(720px, 100%) !important;
+    gap: 14px !important;
+    margin-left: auto !important;
+}
+
+/* Tek buton kaldığında tüm genişliği kullan */
+#mezatEkrani #teklifButonlari:has(> button:only-child) {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: min(500px, 100%) !important;
+    margin-left: auto !important;
+}
+
+/* Yazılar taşmasın */
+#mezatEkrani #teklifButonlari button {
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+    font-size: 18px !important;
+    padding: 12px 16px !important;
+}
+
+/* Takımıma al butonu */
+#mezatEkrani #teklifButonlari:has(> button:nth-child(2):last-child)
+button:first-child {
+    background: linear-gradient(180deg, #f5dda0, #ce9f4b) !important;
+    color: #1b170e !important;
+    border: 1px solid #ffdf92 !important;
+}
+
+/* Rakibe ver butonu */
+#mezatEkrani #teklifButonlari:has(> button:nth-child(2):last-child)
+button:last-child {
+    background: linear-gradient(180deg, #45282c, #24171b) !important;
+    color: #ffe5e3 !important;
+    border: 1px solid #c65b62 !important;
+}
+
+/* SEÇİM BUTONLARINDAKİ EMOJİLERİ GİZLEMEK
+   İÇİN BUTON METNİNİ CSS İLE DEĞİŞTİR */
+
+#mezatEkrani #teklifButonlari
+button[data-mezat-secim="takim"],
+#mezatEkrani #teklifButonlari
+button[data-mezat-secim="rakip"] {
+    font-size: 0 !important;
+}
+
+#mezatEkrani #teklifButonlari
+button[data-mezat-secim="takim"]::after {
+    content: "TAKIMIMA AL";
+    font-size: 20px;
+    font-weight: 900;
+}
+
+#mezatEkrani #teklifButonlari
+button[data-mezat-secim="rakip"]::after {
+    content: "RAKİBE VER";
+    font-size: 20px;
+    font-weight: 900;
+}
